@@ -18,7 +18,7 @@ app.use(cors())
 connectDB();
 
 //api endpoints
-app.use("/api/food",foodRouter)
+app.use("/api/food",foodRouter) //creates a route that states “For every request that starts with /api/food, hand it over to foodRouter.”
 app.use("/images",express.static('uploads'))
 
 app.get("/",(req,res)=>{
