@@ -17,6 +17,18 @@ const MyOrders = () => {
         console.log(response.data.data);
     }
 
+    //for the button to update trackOrder
+    const updateTrackOrder = async (orderId) => {
+        const response = await axios.post(url+"/api/order/trackorder",{orderId});
+        if(response.data.success){
+          const updatedOrders = data.map((order) => order._id === orderId ?
+           {...order, status: response.data.data.status}: order);
+        setData(updatedOrders);
+        }else{
+          toast.error("Error");
+        }
+      }
+
     useEffect(()=>{
         if (token) {
             fetchOrders();
@@ -41,7 +53,7 @@ const MyOrders = () => {
                     <p>₹{order.amount}.00</p>
                     <p>Items: {order.items.length}</p>
                     <p><span>&#x25cf;</span> <b>{order.status}</b></p>
-                    <button onClick={()=>fetchOrders()}>Track Order</button>
+                    <button onClick={()=>updateTrackOrder(order._id)}>Track Order</button>
                 </div>
             )
         })}
