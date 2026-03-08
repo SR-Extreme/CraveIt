@@ -20,10 +20,4 @@ foodRouter.post("/add",upload.single("image"),addFood) // This posts data to mon
 foodRouter.get("/list",listFood)
 foodRouter.post("/remove",removeFood)
 
-
-
-
-
-
-
 export default foodRouter;
