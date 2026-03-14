@@ -4,6 +4,7 @@ import { assets } from '../../assets/assets'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../context/StoreContext'
+import craveIt_logo from '../../assets/craveIt_logo.png'
 
 const Navbar = ({ setShowLogin }) => {
 
@@ -29,7 +30,7 @@ const Navbar = ({ setShowLogin }) => {
 
   return (
     <div className='navbar'>
-      <Link to='/'><img src={assets.logo} alt="" className="logo" /></Link>
+      <Link to='/'><img src={craveIt_logo} alt="" className="logo" /></Link>
       <ul className="navbar-menu">
         <Link to='/' onClick={() => setMenu("home")} className={menu === "home" ? "active" : ""}>home</Link>
         <a href="#explore-menu" onClick={() => setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</a>

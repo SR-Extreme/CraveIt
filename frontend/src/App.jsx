@@ -11,6 +11,8 @@ import { useState } from 'react'
 import Verify from './pages/Verify/Verify'
 import MyOrders from './pages/MyOrders/MyOrders'
 import Search from './pages/Search/Search'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const App = () => {
@@ -33,6 +35,7 @@ const App = () => {
       </div>
       <AppDownload />
       <Footer />
+      <ToastContainer />
     </>
   )
 }

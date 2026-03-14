@@ -25,8 +25,8 @@
     border: none;
 }
 
-.cart-items-item .cross{
-     cursor: pointer;
+.cart-items-item .cross {
+    cursor: pointer;
 }
 
 .cart-bottom {
@@ -96,12 +96,17 @@
     border-radius: 4px;
 }
 
-@media (max-width:750px){
-    .cart-bottom{
+.cart-promocode-discount {
+    color: green;
+    font-weight: 600;
+}
+
+@media (max-width:750px) {
+    .cart-bottom {
         flex-direction: column-reverse;
     }
 
-    .cart-promocode{
+    .cart-promocode {
         justify-content: start;
     }
 }
