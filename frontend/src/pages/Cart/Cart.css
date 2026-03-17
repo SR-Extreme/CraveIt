@@ -27,6 +27,31 @@
 
 .cart-items-item .cross {
     cursor: pointer;
+    justify-self: flex-start;
+    border: none;
+    outline: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ff4b4b, #e02424);
+    box-shadow: 0 4px 10px rgba(224, 36, 36, 0.35);
+    transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+}
+
+.cart-items-item .cross:hover {
+    background: linear-gradient(135deg, #e02424, #b91c1c);
+    box-shadow: 0 6px 14px rgba(185, 28, 28, 0.45);
+    transform: translateY(-1px);
+}
+
+.cart-items-item .cross:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(185, 28, 28, 0.35);
+    opacity: 0.95;
 }
 
 .cart-bottom {

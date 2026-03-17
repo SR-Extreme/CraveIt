@@ -2,13 +2,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 4%;
+    padding: 4px 4%;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-radius: 0 0 10px 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .navbar .logo {
-    width: max(10%, 80px);
+    width: max(8%, 70px);
+    object-fit: contain;
 }
 
 .navbar .profile {
-    width: 40px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(0, 0, 0, 0.06);
 }

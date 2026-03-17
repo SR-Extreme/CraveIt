@@ -5,6 +5,10 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { StoreContext } from '../../context/StoreContext'
 import craveIt_logo from '../../assets/craveIt_logo.png'
+import { FaUser } from "react-icons/fa6";
+import { RiLogoutBoxRLine } from "react-icons/ri";
+import { IoBag } from "react-icons/io5";
+
 
 const Navbar = ({ setShowLogin }) => {
 
@@ -20,6 +24,7 @@ const Navbar = ({ setShowLogin }) => {
 
   const handleSearch = () => {
     if (searchTerm != "") navigate(`/search?q=${searchTerm}`);
+    setSearchTerm("");
   }
 
   const handleEnterPress = (e) => {
@@ -56,9 +61,11 @@ const Navbar = ({ setShowLogin }) => {
         {!token ? <button onClick={() => setShowLogin(true)}>sign in</button> : <div className='navbar-profile'>
           <img src={assets.profile_icon} alt="" />
           <ul className="nav-profile-dropdown">
-            <li onClick={() => navigate('/myorders')}><img src={assets.bag_icon} alt="" /><p>Orders</p></li>
+            <li onClick={() => navigate('/myprofile')}><FaUser color="tomato" /><p>Profile</p></li>
             <hr />
-            <li onClick={logout}><img src={assets.logout_icon} alt="" /><p>Logout</p></li>
+            <li onClick={() => navigate('/myorders')}><IoBag color="tomato" /><p>Orders</p></li>
+            <hr />
+            <li onClick={logout}><RiLogoutBoxRLine color="tomato" /><p>Logout</p></li>
           </ul>
         </div>}
       </div>

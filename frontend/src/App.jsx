@@ -13,6 +13,7 @@ import MyOrders from './pages/MyOrders/MyOrders'
 import Search from './pages/Search/Search'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Profile from './pages/Profile/Profile'
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
           <Route path='/order' element={<PlaceOrder />}></Route>
           <Route path='/verify' element={<Verify />} />
           <Route path='/myorders' element={<MyOrders />} />
+          <Route path='/myprofile' element={<Profile />} />
           <Route path='/search' element={<Search />} />
         </Routes>
       </div>

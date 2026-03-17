@@ -4,66 +4,114 @@ import bcrypt from "bcrypt"
 import validator from "validator"
 
 //login user
-const loginUser = async (req,res) => {
-    const {email,password} = req.body;
-    try{
-        const user = await userModel.findOne({email});
-        if(!user){
-            return res.json({success:false,message:"User doesn't exist"});
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.json({ success: false, message: "User doesn't exist" });
         }
-        const isMatch = await bcrypt.compare(password,user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
 
-        if(!isMatch){
-            return res.json({success:false,message:"Invalid Credentials"});
+        if (!isMatch) {
+            return res.json({ success: false, message: "Invalid Credentials" });
         }
 
         const token = createToken(user._id);
-        res.json({success:true,token});
-    }catch(error){
-        res.json({success:false,message:"Error"});
+        res.json({ success: true, token });
+    } catch (error) {
+        res.json({ success: false, message: "Error" });
     }
 }
 
 const createToken = (id) => {
-    return jwt.sign({id},process.env.JWT_SECRET);
+    return jwt.sign({ id }, process.env.JWT_SECRET);
 }
 
 //register user
-const resgisterUser = async(req,res) => {
-    const {name,password,email} = req.body;
-    try{
+const resgisterUser = async (req, res) => {
+    const { name, password, email, phone } = req.body;
+    try {
         //checking is user already exists
-        const exists = await userModel.findOne({email});
-        if(exists){
-            return res.json({success:false,message:"User already exists"});
+        const exists = await userModel.findOne({ email });
+        if (exists) {
+            return res.json({ success: false, message: "User already exists" });
         }
 
         //validate email format and strong password
-        if(!validator.isEmail(email)){
-            return res.json({success:false,message:"Please enter a valid email"});
+        if (!validator.isEmail(email)) {
+            return res.json({ success: false, message: "Please enter a valid email" });
         }
 
         //if password is 8 character or more or not
-        if(password.length<8){
-            return res.json({success:false,message:"Please enter a strong password"});
+        if (password.length < 8) {
+            return res.json({ success: false, message: "Please enter a strong password" });
+        }
+
+        if (phone.length != 10) {
+            return res.json({ success: false, message: "Please enter a valid 10 digit Mobile Number" });
         }
 
         //hashing user password
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password,salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = new userModel({
-            name:name,
-            email:email,
-            password:hashedPassword,
+            name: name,
+            email: email,
+            phone: phone,
+            password: hashedPassword,
         })
 
         const user = await newUser.save();
         const token = createToken(user._id);
-        res.json({success:true,token});
+        res.json({ success: true, token });
 
-    }catch(error){
-        res.json({success:false,message:"Error"});
+    } catch (error) {
+        res.json({ success: false, message: "Error" });
     }
 }
 
-export {loginUser,resgisterUser};
+//get current user
+const getUser = async (req, res) => {
+    const userId = req.userId;
+
+    try {
+        const user = await userModel.findById(userId).select("-password");
+
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        return res.json({ success: true, data: user });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+const updatePassword = async (req, res) => {
+    const { email, oldPassword, newPassword } = req.body;
+
+    try {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.json({ success: false, message: "User doesn't exist" });
+        }
+
+        const ismatch = await bcrypt.compare(oldPassword, user.password);
+        if (!ismatch) {
+            return res.json({ success: false, message: "Old password is incorrect!!" });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        await userModel.findByIdAndUpdate(user._id, { password: hashedPassword });
+
+        res.json({ success: true, message: "Password Updated Successfully!!" });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+export { loginUser, resgisterUser, getUser, updatePassword };
