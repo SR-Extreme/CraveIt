@@ -11,6 +11,30 @@ const StoreContextProvider = (props) => {
     const [food_list, setFoodList] = useState([]);
     const [promocode, setPromocode] = useState("");
     const [isCorrectPromo, setIsCorrectPromo] = useState(false);
+
+    const [defaultIndex, setDefaultIndex] = useState(() => {
+        return localStorage.getItem("defaultIndex") !== null
+            ? Number(localStorage.getItem("defaultIndex"))
+            : null;
+    });
+
+    const [DefaultData, setDefaultData] = useState(() => {
+        const savedData = localStorage.getItem("defaultAddress");
+        return savedData
+            ? JSON.parse(savedData)
+            : {
+                firstName: "",
+                lastName: "",
+                email: "",
+                street: "",
+                city: "",
+                state: "",
+                zipcode: "",
+                country: "",
+                phone: ""
+            };
+    });
+
     const targetPromocode = "SAURAV10";
 
     const removeFromCart = async (itemId) => {
@@ -55,6 +79,7 @@ const StoreContextProvider = (props) => {
         setCartItems(response.data.cartData);
     }
 
+    //useEffects
     useEffect(() => {
         async function loadData() {
             await fetchFoodList();
@@ -65,6 +90,16 @@ const StoreContextProvider = (props) => {
         }
         loadData();
     }, []);
+
+    useEffect(() => {
+        if (defaultIndex !== null) {
+            localStorage.setItem("defaultIndex", defaultIndex);
+        }
+    }, [defaultIndex]);
+
+    useEffect(() => {
+        localStorage.setItem("defaultAddress", JSON.stringify(DefaultData));
+    }, [DefaultData]);
 
     const contextValue = {
         food_list,
@@ -80,7 +115,11 @@ const StoreContextProvider = (props) => {
         setPromocode,
         targetPromocode,
         isCorrectPromo,
-        setIsCorrectPromo
+        setIsCorrectPromo,
+        DefaultData,
+        setDefaultData,
+        defaultIndex,
+        setDefaultIndex
     }
     return (
         <StoreContext.Provider value={contextValue}>

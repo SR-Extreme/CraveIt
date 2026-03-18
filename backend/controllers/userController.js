@@ -114,4 +114,20 @@ const updatePassword = async (req, res) => {
     }
 }
 
-export { loginUser, resgisterUser, getUser, updatePassword };
+const updateAddress = async (req, res) => {
+    const { address, email } = req.body;
+    try {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.json({ success: false, message: "User doesn't exist" });
+        }
+
+        await userModel.findByIdAndUpdate(user._id, { $push: { address: address } });
+        res.json({ success: true, message: "Address saved Successfully!!" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+export { loginUser, resgisterUser, getUser, updatePassword, updateAddress };

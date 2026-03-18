@@ -15,7 +15,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Profile from './pages/Profile/Profile'
 
-
 const App = () => {
 
   const [showLogin, setShowLogin] = useState(false);

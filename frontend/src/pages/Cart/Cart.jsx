@@ -6,8 +6,7 @@ import { toast } from "react-toastify";
 
 const Cart = () => {
 
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, setPromocode, promocode, targetPromocode, setIsCorrectPromo, isCorrectPromo } = useContext(StoreContext)
-
+  const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, setPromocode, promocode, targetPromocode, setIsCorrectPromo, isCorrectPromo } = useContext(StoreContext);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {

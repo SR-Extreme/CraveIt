@@ -6,18 +6,18 @@ import { useNavigate } from 'react-router-dom'
 
 const PlaceOrder = () => {
 
-  const { getTotalCartAmount, token, food_list, cartItems, url, isCorrectPromo } = useContext(StoreContext);
+  const { getTotalCartAmount, token, food_list, cartItems, url, isCorrectPromo, DefaultData } = useContext(StoreContext);
 
   const [data, setData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    street: "",
-    city: "",
-    state: "",
-    zipcode: "",
-    country: "",
-    phone: ""
+    firstName: DefaultData.firstName,
+    lastName: DefaultData.lastName,
+    email: DefaultData.email,
+    street: DefaultData.street,
+    city: DefaultData.city,
+    state: DefaultData.state,
+    zipcode: DefaultData.zipcode,
+    country: DefaultData.country,
+    phone: DefaultData.phone
   })
 
   const onChangeHandler = (event) => {
