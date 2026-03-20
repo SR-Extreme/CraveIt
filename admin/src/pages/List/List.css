@@ -1,19 +1,41 @@
+.list {
+    color: var(--text-primary);
+}
+
+.list>p {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.list-table {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #ffffff;
+}
+
 .list-table-format {
     display: grid;
     grid-template-columns: 0.5fr 2fr 1fr 1fr 0.5fr;
     align-items: center;
     gap: 10px;
-    padding: 12px 15px;
-    border: 1px solid #cacaca;
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f0f0;
     font-size: 13px;
 }
 
 .list-table-format.title {
-    background-color: #f9f9f9;
+    background-color: #fafafa;
+    color: #4b4b4b;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .list-table-format img {
     width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 .list-table-format .cross {
@@ -28,30 +50,36 @@
     letter-spacing: 0.03em;
     text-transform: uppercase;
     color: #ffffff;
-    background: linear-gradient(135deg, #ff4b4b, #e02424);
-    box-shadow: 0 4px 10px rgba(224, 36, 36, 0.35);
+    background: linear-gradient(135deg, #ff6b53, #ee4932);
+    box-shadow: 0 4px 10px rgba(238, 73, 50, 0.3);
     transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
 }
 
 .list-table-format .cross:hover {
-    background: linear-gradient(135deg, #e02424, #b91c1c);
-    box-shadow: 0 6px 14px rgba(185, 28, 28, 0.45);
+    background: linear-gradient(135deg, #ee4932, #db3d27);
+    box-shadow: 0 6px 14px rgba(219, 61, 39, 0.35);
     transform: translateY(-1px);
 }
 
 .list-table-format .cross:active {
     transform: translateY(0);
-    box-shadow: 0 3px 8px rgba(185, 28, 28, 0.35);
+    box-shadow: 0 3px 8px rgba(219, 61, 39, 0.3);
     opacity: 0.95;
 }
 
 @media (max-width: 600px) {
     .list-table-format {
         grid-template-columns: 1fr 3fr 1fr;
-        gap: 15px;
+        gap: 12px;
+        padding: 12px;
     }
 
     .list-table-format.title {
         display: none;
+    }
+
+    .list-table-format img {
+        width: 42px;
+        height: 42px;
     }
 }

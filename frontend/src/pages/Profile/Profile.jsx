@@ -95,7 +95,27 @@ const Profile = () => {
             phone: address.phone
         })
         setDefaultIndex(index);
+    }
 
+    const deleteAddress = async (addId, index) => {
+        const token = localStorage.getItem("token");
+        const response = await axios.post(url + "/api/user/deleteaddress", { id: addId }, { headers: { token: token } });
+        if (response.data.success) {
+            setDefaultData({
+                firstName: "",
+                lastName: "",
+                email: "",
+                street: "",
+                city: "",
+                state: "",
+                zipcode: "",
+                country: "",
+                phone: ""
+            })
+            setDefaultIndex(null);
+            getUser();
+            toast.success(response.data.message);
+        }
     }
 
     useEffect(() => {
@@ -217,6 +237,14 @@ const Profile = () => {
                                         <span className="address-phone">{addr.phone}</span>
                                     </p>
                                 </div>
+                                <button
+                                    type="button"
+                                    className="address-remove-btn"
+                                    onClick={() => deleteAddress(addr._id, index)}
+                                    aria-label={`Remove address for ${addr.firstName} ${addr.lastName}`}
+                                >
+                                    ✕
+                                </button>
                                 <div className="address-actions">
                                     <button
                                         type="button"

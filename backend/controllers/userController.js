@@ -91,6 +91,13 @@ const getUser = async (req, res) => {
 const updatePassword = async (req, res) => {
     const { email, oldPassword, newPassword } = req.body;
 
+    if (!oldPassword || !newPassword) {
+        return res.json({
+            success: false,
+            message: "Please type both required Password's"
+        });
+    }
+
     try {
         const user = await userModel.findOne({ email });
         if (!user) {
@@ -130,4 +137,25 @@ const updateAddress = async (req, res) => {
     }
 }
 
-export { loginUser, resgisterUser, getUser, updatePassword, updateAddress };
+const deleteAddress = async (req, res) => {
+    const { id } = req.body;
+    const userId = req.userId;
+    try {
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.json({ success: false, message: "User doesn't exist" });
+        }
+
+        user.address = user.address.filter((addr) => {
+            return addr._id.toString() !== id;
+        })
+
+        await user.save();
+        res.json({ success: true, message: "Address removed successfully!!" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+export { loginUser, resgisterUser, getUser, updatePassword, updateAddress, deleteAddress };

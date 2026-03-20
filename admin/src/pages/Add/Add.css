@@ -1,9 +1,13 @@
 .add {
-    width: 70%;
-    margin-left: max(5vw, 25px);
-    margin-top: 50px;
-    color: #6d6d6d;
-    font-size: 16px;
+    width: min(920px, calc(100% - 40px));
+    margin: 0 auto 22px;
+    color: var(--text-secondary);
+    font-size: 15px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    padding: 24px;
 }
 
 .flex-col {
@@ -14,36 +18,59 @@
 .add form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
+}
+
+.add p {
+    font-size: 14px;
+    color: #4d4d4d;
+    margin-bottom: 6px;
 }
 
 .add-img-upload {
-    gap: 10px;
+    gap: 8px;
 }
 
 .add-img-upload img {
-    width: 120px;
+    width: 140px;
+    height: 100px;
+    object-fit: cover;
     cursor: pointer;
+    border: 1px dashed #d7d7d7;
+    border-radius: 12px;
+    background: #fcfcfc;
+    padding: 4px;
 }
 
 .add-product-name,
 .add-product-description {
     width: 100%;
-    max-width: 500px;
+    max-width: 620px;
 }
 
 .add-product-name input,
 .add-product-description textarea {
-    padding: 10px;
-    border: 1px solid #cfcfcf;
+    padding: 12px 13px;
+    border: 1px solid #dedede;
     outline: none;
-    border-radius: 4px;
+    border-radius: 9px;
     font-size: 14px;
+    color: var(--text-primary);
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-product-name input:focus,
+.add-product-description textarea:focus,
+.add-category-price select:focus,
+.add-category-price input:focus {
+    border-color: rgba(255, 99, 71, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.12);
 }
 
 .add-category-price {
     display: flex;
-    gap: 30px;
+    gap: 16px;
     flex-wrap: wrap;
 }
 
@@ -51,30 +78,44 @@
 .add-price {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
 }
 
 .add-category-price select,
 .add-category-price input {
-    width: 120px;
-    padding: 10px;
-    border: 1px solid #cfcfcf;
+    width: 160px;
+    padding: 10px 12px;
+    border: 1px solid #dedede;
     outline: none;
-    border-radius: 4px;
+    border-radius: 9px;
     font-size: 14px;
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .add-btn {
-    max-width: 120px;
+    width: fit-content;
     border: none;
-    padding: 10px;
-    background-color: black;
+    padding: 11px 22px;
+    background-color: var(--brand-color);
     color: white;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 10px;
     margin-top: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .add-btn:hover {
-    opacity: 0.85;
+    background-color: var(--brand-color-dark);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+    .add {
+        width: calc(100% - 24px);
+        margin: 0 auto 14px;
+        padding: 18px;
+    }
 }

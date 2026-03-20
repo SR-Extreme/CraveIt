@@ -69,11 +69,13 @@
     background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%);
     border-radius: 12px;
     padding: 16px 18px;
+    padding-right: 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     width: 100%;
+    position: relative;
 }
 
 .address-item+.address-item {
@@ -149,6 +151,44 @@
     margin-left: 6px;
 }
 
+.address-remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    min-width: 25px;
+    padding: 0;
+    margin: 0;
+    border-radius: 10px;
+    border: 1px solid #e8e8e8;
+    background: #ffffff;
+    color: #555;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.address-remove-btn:hover {
+    background: #fafafa;
+    border-color: #dddddd;
+    color: #333;
+}
+
+.address-remove-btn:active {
+    transform: scale(0.98);
+}
+
+.address-remove-btn:focus-visible {
+    outline: 2px solid rgba(255, 99, 71, 0.45);
+    outline-offset: 1px;
+}
+
 .profile-card form {
     display: flex;
     flex-direction: column;
@@ -165,8 +205,8 @@
     font-size: 14px;
 }
 
-.profile-card button:not(.profile-btn),
-.profile-card>button:not(.profile-btn) {
+.profile-card button:not(.profile-btn):not(.address-remove-btn),
+.profile-card>button:not(.profile-btn):not(.address-remove-btn) {
     border: none;
     color: #ffffff;
     background-color: tomato;
@@ -180,8 +220,8 @@
     align-self: center;
 }
 
-.profile-card button:not(.profile-btn):hover,
-.profile-card>button:not(.profile-btn):hover {
+.profile-card button:not(.profile-btn):not(.address-remove-btn):hover,
+.profile-card>button:not(.profile-btn):not(.address-remove-btn):hover {
     opacity: 0.95;
 }
 
@@ -352,9 +392,18 @@
         flex-direction: column;
         align-items: stretch;
         gap: 10px;
+        padding-right: 18px;
+        padding-top: 44px;
     }
 
     .address-actions {
         justify-content: flex-start;
+    }
+
+    .address-remove-btn {
+        top: 10px;
+        right: 10px;
+        width: 28px;
+        height: 28px;
     }
 }

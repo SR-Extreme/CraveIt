@@ -1,32 +1,55 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: Outfit;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: Outfit, sans-serif;
+}
+
+:root {
+  --brand-color: #ff6347;
+  --brand-color-dark: #e8553b;
+  --brand-color-soft: #fff1ed;
+  --bg-main: #f7f8fa;
+  --bg-card: #ffffff;
+  --text-primary: #222222;
+  --text-secondary: #666666;
+  --border-color: #e8e8e8;
+  --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.06);
+  --radius-md: 10px;
+  --radius-lg: 14px;
 }
 
 body {
-    min-height: 100vh;
-    background-color: #fcfcfc;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
 }
 
-a{
+a {
   text-decoration: none;
   color: inherit;
 }
 
-hr{
+hr {
   border: none;
   height: 1px;
-  background-color: #a9a9a9;
+  background-color: var(--border-color);
 }
 
-.app-content{
+.app-content {
   display: flex;
+  align-items: stretch;
 }
 
-.cursor{
+.app-content> :not(.sidebar) {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cursor {
   cursor: pointer;
 }

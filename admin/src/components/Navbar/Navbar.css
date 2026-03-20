@@ -2,24 +2,36 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 4%;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border-radius: 0 0 10px 10px;
+    padding: 5px 18px;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-soft);
+    border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
 .navbar .logo {
-    width: max(8%, 70px);
+    width: clamp(74px, 6.2vw, 96px);
     object-fit: contain;
 }
 
 .navbar .profile {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(0, 0, 0, 0.06);
+    border: 2px solid var(--brand-color-soft);
+    box-shadow: 0 2px 8px rgba(255, 99, 71, 0.18);
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 5px 10px;
+    }
+
+    .navbar .profile {
+        width: 26px;
+        height: 26px;
+    }
 }
