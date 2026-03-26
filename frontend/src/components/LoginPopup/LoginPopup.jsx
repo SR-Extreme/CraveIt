@@ -15,7 +15,8 @@ const LoginPopup = ({ setShowLogin }) => {
     name: "",
     email: "",
     phone: "",
-    password: ""
+    password: "",
+    role: ""
   })
 
   const onChangeHandler = (event) => {
@@ -55,7 +56,12 @@ const LoginPopup = ({ setShowLogin }) => {
         <div className="login-popup-inputs">
           {currState === "Login" ? <></> : (<>
             <input type="text" name="name" onChange={onChangeHandler} value={data.name} placeholder='Your Name' required />
-            <input type="number" name="phone" onChange={onChangeHandler} value={data.phone} placeholder='Your Phone Number' required /></>)}
+            <input type="number" name="phone" onChange={onChangeHandler} value={data.phone} placeholder='Your Phone Number' required />
+            <select name="role" onChange={onChangeHandler} value={data.role} required>
+              <option value="">Select Role</option>
+              <option value="admin">admin</option>
+              <option value="user">user</option>
+              <option value="delivery">delievery agent</option></select></>)}
           <input type="email" name="email" onChange={onChangeHandler} value={data.email} placeholder='Your email' required />
           <input type="password" name="password" onChange={onChangeHandler} value={data.password} placeholder='Password' required />
         </div>

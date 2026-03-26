@@ -14,6 +14,8 @@ import Search from './pages/Search/Search'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Profile from './pages/Profile/Profile'
+import OrderTracking from './pages/OrderTracking/OrderTracking'
+import DeliveryPanel from './pages/DeliveryPanel/DeliveryPanel'
 
 const App = () => {
 
@@ -32,6 +34,8 @@ const App = () => {
           <Route path='/myorders' element={<MyOrders />} />
           <Route path='/myprofile' element={<Profile />} />
           <Route path='/search' element={<Search />} />
+          <Route path="/track-order/:orderId" element={<OrderTracking />} />
+          <Route path="/delivery-panel" element={<DeliveryPanel />} />
         </Routes>
       </div>
       <AppDownload />
