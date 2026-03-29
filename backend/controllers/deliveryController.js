@@ -1,5 +1,6 @@
 import deliveryModel from "../models/deliveryModel.js"
 import orderModel from "../models/orderModel.js"
+import userModel from "../models/userModel.js";
 
 //assign delivery partner to order
 const assignDelivery = async (req, res) => {
@@ -68,4 +69,17 @@ const updateDeliveryStatus = async (req, res) => {
     }
 }
 
-export { assignDelivery, getMyDeliveries, updateDeliveryStatus }
+//update the availability
+const updateAvailability = async (req, res) => {
+    const { available } = req.body;
+    const userId = req.userId;
+    try {
+        await userModel.findByIdAndUpdate(userId, { available: available });
+        return res.json({ success: true, message: "Wait for further Assignment's" });
+    } catch (error) {
+        console.log(error);
+        return res.json({ success: false, message: "error" });
+    }
+}
+
+export { assignDelivery, getMyDeliveries, updateDeliveryStatus, updateAvailability }

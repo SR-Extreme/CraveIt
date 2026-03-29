@@ -1,0 +1,116 @@
+.order-status-container {
+    width: 100%;
+    background: #fff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+.order-status-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #222;
+}
+
+.order-status-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.status-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 90px;
+    opacity: 0.4;
+    transition: all 0.3s ease;
+}
+
+.status-step.active {
+    opacity: 1;
+}
+
+.status-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #ddd;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.status-step.active .status-circle {
+    background: tomato;
+    color: white;
+}
+
+.status-label {
+    font-size: 14px;
+    text-align: center;
+    color: #444;
+    font-weight: 500;
+}
+
+.current-status-text {
+    margin-top: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.current-status-text span {
+    color: tomato;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .order-status-steps {
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .status-step {
+        min-width: 100px;
+    }
+}
+
+.order-status-container button {
+    margin-top: 20px;
+    padding: 10px 18px;
+    background: tomato;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.order-status-container button:hover {
+    background: #e5533d;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 188, 152, 0.3);
+}
+
+.order-status-container button:active {
+    transform: scale(0.97);
+    box-shadow: none;
+}
+
+.order-status-container button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}

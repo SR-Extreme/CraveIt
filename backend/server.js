@@ -19,7 +19,17 @@ app.use(express.json())
 app.use(cors())
 
 //db connection
-connectDB();
+const startServer = async () => {
+    try {
+        await connectDB();
+        server.listen(port, () => {
+            console.log(`Server running on http://localhost:${port}`)
+        });
+    } catch (error) {
+        console.error("Server startup failed:", error.message);
+        process.exit(1);
+    }
+};
 
 //api endpoints
 app.use("/api/food", foodRouter); //creates a route that states “For every request that starts with /api/food, hand it over to foodRouter.”
@@ -36,7 +46,5 @@ app.get("/", (req, res) => {
 const server = http.createServer(app);
 initSocket(server);
 
-server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`)
-})
+startServer();
 //mongodb+srv://foodapplication:sauravroy@cluster0.xztgd2d.mongodb.net/?
