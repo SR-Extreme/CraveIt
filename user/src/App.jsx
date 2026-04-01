@@ -17,12 +17,13 @@ import Profile from './pages/Profile/Profile'
 import OrderTracking from './pages/OrderTracking/OrderTracking'
 import Auth from './pages/Auth/Auth'
 import { useLocation } from 'react-router-dom'
+import VerifyOTP from './pages/VerifyOTP/VerifyOTP'
 
 const App = () => {
 
   const [showLogin, setShowLogin] = useState(false);
   const location = useLocation();
-  const hideLayout = location.pathname === "/auth";
+  const hideLayout = location.pathname === "/auth" || location.pathname === "/verifyotp";
   return (
     <>
       {showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
@@ -31,6 +32,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Home />}></Route>
           <Route path='/auth' element={<Auth />}></Route>
+          <Route path='/verifyotp' element={<VerifyOTP />} />
           <Route path='/cart' element={<Cart />}></Route>
           <Route path='/order' element={<PlaceOrder />}></Route>
           <Route path='/verify' element={<Verify />} />

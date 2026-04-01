@@ -39,26 +39,12 @@ const Auth = () => {
                 return;
             }
 
-            const token = response.data.token;
-
-            const profileResponse = await axios.post(
-                `${url}/api/user/getuser`,
-                {},
-                { headers: { token } }
-            );
-
-            if (!profileResponse.data.success || profileResponse.data.data?.role !== "user") {
-                alert("This account is not a user account.");
-                return;
-            }
-
             if(currState === "Sign Up"){
                 setCurrState("Login");
                 return;
             }
-            sessionStorage.setItem("user_token", token);
-            localStorage.setItem("user_token", token);
-            window.location.href = "/";
+        
+            window.location.href = `/verifyotp?email=${data.email}`;
         } catch (error) {
             console.error(error);
             alert("Something went wrong");

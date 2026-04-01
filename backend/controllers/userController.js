@@ -2,6 +2,8 @@ import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import validator from "validator"
+import generateOTP from "../utils/generateOtp.js";
+import sendOTP from "../utils/sendOTP.js";
 
 //login user
 const loginUser = async (req, res) => {
@@ -17,9 +19,17 @@ const loginUser = async (req, res) => {
             return res.json({ success: false, message: "Invalid Credentials" });
         }
 
-        const token = createToken(user._id);
-        res.json({ success: true, token });
+        const otp = generateOTP();
+
+        user.otp = otp;
+        user.otpExpiry = Date.now() + 5*60*100;
+        await user.save();
+
+        await sendOTP(email,otp);
+
+        res.json({ success: true, message:"OTP sent to successfully to Email" });
     } catch (error) {
+        console.log(error);
         res.json({ success: false, message: "Error" });
     }
 }
@@ -169,4 +179,25 @@ const getAllUsers = async (req,res) => {
     }
 }
 
-export { loginUser, resgisterUser, getUser, updatePassword, updateAddress, deleteAddress, getAllUsers };
+const verifyOTP = async(req,res) => {
+    const {otp,email} = req.body;
+    try {
+        const user = await userModel.findOne({email});
+
+        if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
+    return res.json({ success:false , message: "Invalid or expired OTP" });
+  }
+
+  user.otp=null;
+  user.otpExpiry = null;
+  await user.save();
+
+  const token = createToken(user._id);
+
+  res.json({success:true, token:token});
+    } catch (error) {
+        console.log(error);
+        res.json({success:false,message:"Error"});
+    }
+}
+export { loginUser, resgisterUser, getUser, updatePassword, updateAddress, deleteAddress, getAllUsers ,verifyOTP };

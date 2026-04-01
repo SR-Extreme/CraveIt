@@ -1,5 +1,5 @@
 import express from "express"
-import { deleteAddress, getAllUsers, getUser, loginUser, resgisterUser, updateAddress, updatePassword } from "../controllers/userController.js"
+import { deleteAddress, getAllUsers, getUser, loginUser, resgisterUser, updateAddress, updatePassword, verifyOTP } from "../controllers/userController.js"
 import authMiddleware from "../middleware/auth.js";
 import roleMiddleware from "../middleware/role.js";
 
@@ -12,5 +12,6 @@ userRouter.post("/updatepassword", updatePassword);
 userRouter.post("/updateaddress", updateAddress);
 userRouter.post("/deleteaddress", authMiddleware, deleteAddress);
 userRouter.get("/getallusers",authMiddleware,roleMiddleware("admin"),getAllUsers);
+userRouter.post("/verifyotp", verifyOTP);
 
 export default userRouter;
