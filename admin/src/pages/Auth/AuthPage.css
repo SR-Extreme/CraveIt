@@ -4,21 +4,38 @@
   place-items: center;
   padding: 24px;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
   background-color: #f3f5f9;
-  background-image:
-    radial-gradient(ellipse 90% 55% at 50% -15%, rgba(255, 99, 71, 0.09), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 100% 100%, rgba(73, 85, 126, 0.07), transparent 50%),
-    radial-gradient(ellipse 60% 45% at 0% 80%, rgba(73, 85, 126, 0.05), transparent 45%);
+}
+
+.role-auth-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('/Login_bg.jpg') no-repeat center center;
+  background-size: cover;
+  filter: blur(6px);
+  transform: scale(1.08);
+  z-index: 0;
 }
 
 .role-auth-card {
+  position: relative;
+  z-index: 1;
+
   width: min(92vw, 420px);
-  background: #fff;
-  border-radius: 12px;
   padding: 28px 24px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
   border: 1px solid rgba(73, 85, 126, 0.08);
   box-shadow: 0 12px 40px rgba(73, 85, 126, 0.1);
 }

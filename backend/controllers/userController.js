@@ -159,4 +159,14 @@ const deleteAddress = async (req, res) => {
     }
 }
 
-export { loginUser, resgisterUser, getUser, updatePassword, updateAddress, deleteAddress };
+const getAllUsers = async (req,res) => {
+    try {
+        const Users = await userModel.find({});
+        res.json({success:true,data:Users});
+    } catch (error) {
+        console.log(error);
+        res.json({success:false,message:"Error"});
+    }
+}
+
+export { loginUser, resgisterUser, getUser, updatePassword, updateAddress, deleteAddress, getAllUsers };

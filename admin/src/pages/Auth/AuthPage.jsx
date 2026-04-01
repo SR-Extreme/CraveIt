@@ -5,8 +5,6 @@ import "./AuthPage.css";
 
 const AuthPage = () => {
   const [params] = useSearchParams();
-  const mode = params.get("mode") === "signup" ? "Sign Up" : "Login";
-  const [currState, setCurrState] = useState(mode);
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -22,9 +20,8 @@ const AuthPage = () => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const endpoint = currState === "Login" ? "/api/user/login" : "/api/user/register";
-    const payload = currState === "Login" ? data : { ...data, role: "admin" };
-    const response = await axios.post(`${url}${endpoint}`, payload);
+    const endpoint = "/api/user/login";
+    const response = await axios.post(`${url}${endpoint}`, data);
 
     if (!response.data.success) {
       alert(response.data.message);
@@ -46,22 +43,10 @@ const AuthPage = () => {
   return (
     <div className="role-auth-page">
       <form className="role-auth-card" onSubmit={onSubmit}>
-        <h2>{currState} as Admin</h2>
-        {currState === "Sign Up" && (
-          <>
-            <input name="name" value={data.name} onChange={onChangeHandler} placeholder="Name" required />
-            <input name="phone" value={data.phone} onChange={onChangeHandler} placeholder="Phone" required />
-          </>
-        )}
+        <h2>Login as Admin</h2>
         <input type="email" name="email" value={data.email} onChange={onChangeHandler} placeholder="Email" required />
         <input type="password" name="password" value={data.password} onChange={onChangeHandler} placeholder="Password" required />
-        <button type="submit">{currState === "Login" ? "Login" : "Create account"}</button>
-        <p>
-          {currState === "Login" ? "Need an account?" : "Already registered?"}{" "}
-          <span onClick={() => setCurrState(currState === "Login" ? "Sign Up" : "Login")}>
-            {currState === "Login" ? "Sign up" : "Login"}
-          </span>
-        </p>
+        <button type="submit">Login</button>
       </form>
     </div>
   );

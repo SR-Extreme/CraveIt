@@ -82,4 +82,15 @@ const updateAvailability = async (req, res) => {
     }
 }
 
-export { assignDelivery, getMyDeliveries, updateDeliveryStatus, updateAvailability }
+const updateAvailabilitytoFalse = async (req, res) => {
+    const { available,deliveryId } = req.body;
+    try {
+        await userModel.findByIdAndUpdate(deliveryId, { available: available });
+        return res.json({ success: true, message: "Wait for further Assignment's" });
+    } catch (error) {
+        console.log(error);
+        return res.json({ success: false, message: "error" });
+    }
+}
+
+export { assignDelivery, getMyDeliveries, updateDeliveryStatus, updateAvailability,updateAvailabilitytoFalse }

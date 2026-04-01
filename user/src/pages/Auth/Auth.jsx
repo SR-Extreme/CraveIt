@@ -52,6 +52,10 @@ const Auth = () => {
                 return;
             }
 
+            if(currState === "Sign Up"){
+                setCurrState("Login");
+                return;
+            }
             sessionStorage.setItem("user_token", token);
             localStorage.setItem("user_token", token);
             window.location.href = "/";

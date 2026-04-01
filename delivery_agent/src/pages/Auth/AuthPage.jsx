@@ -38,6 +38,11 @@ const AuthPage = () => {
       return;
     }
 
+    if(currState === "Sign Up"){
+        setCurrState("Login");
+        return;
+      }
+
     sessionStorage.setItem("delivery_token", token);
     localStorage.setItem("delivery_token", token);
     window.location.href = "/";

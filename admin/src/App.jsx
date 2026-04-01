@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthPage from './pages/Auth/AuthPage';
 import { Navigate } from 'react-router-dom';
+import Assignment from './pages/Assignment/Assignment'
 
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
                   <Route path="/add" element={<Add url={url} />} />
                   <Route path="/list" element={<List url={url} />} />
                   <Route path="/orders" element={<Orders url={url} />} />
+                  <Route path="/assign-orders" element={<Assignment url={url} />} />
                   <Route path="*" element={<Navigate to="/add" replace />} />
                 </Routes>
               </div>

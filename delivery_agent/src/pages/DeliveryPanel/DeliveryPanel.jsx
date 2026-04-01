@@ -43,7 +43,7 @@ const DeliveryPanel = () => {
             if (response.data.success) {
                 if (status === "Delivered") {
                     try {
-                        const availResponse = await axios.post(`${url}/api/delivery/update-available`, { available: true }, { headers: { token: token } });
+                        const availResponse = await axios.post(`${url}/api/delivery/update-available-true`, { available: true }, { headers: { token: token } });
                         if (availResponse.data.success) {
                             toast.success(availResponse.data.message);
                         } else {
