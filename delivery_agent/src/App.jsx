@@ -10,6 +10,7 @@ import DeliveryPastOrders from './pages/DeliveryPastOrders/DeliveryPastOrders'
 import DeliveryCurrentOrders from './pages/DeliveryCurrentOrders/DeliveryCurrentOrders'
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
+import VerifyOTP from './pages/VerifyOTP/VerifyOTP';
 
 const App = () => {
   const token = sessionStorage.getItem("delivery_token") || localStorage.getItem("delivery_token");
@@ -20,6 +21,7 @@ const App = () => {
       <div className='delivery-agent-app'>
         <Routes>
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/verifyotp" element={<VerifyOTP />} />
           <Route
             path="/*"
             element={isAuthenticated ? <DeliveryLayout /> : <Navigate to="/auth?mode=login" replace />}

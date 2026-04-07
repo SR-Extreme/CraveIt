@@ -22,10 +22,10 @@ const loginUser = async (req, res) => {
         const otp = generateOTP();
 
         user.otp = otp;
-        user.otpExpiry = Date.now() + 5*60*100;
+        user.otpExpiry = Date.now() + 5*60*1000;
         await user.save();
 
-        await sendOTP(email,otp);
+        await sendOTP(email,otp,user.name,user.role);
 
         res.json({ success: true, message:"OTP sent to successfully to Email" });
     } catch (error) {

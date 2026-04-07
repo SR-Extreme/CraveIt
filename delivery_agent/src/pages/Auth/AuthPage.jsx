@@ -21,27 +21,29 @@ const AuthPage = () => {
   };
 
   const onSubmit = async (event) => {
+    
     event.preventDefault();
     const endpoint = currState === "Login" ? "/api/user/login" : "/api/user/register";
     const payload = currState === "Login" ? data : { ...data, role: "delivery" };
-    const response = await axios.post(`${url}${endpoint}`, payload);
 
-    if (!response.data.success) {
-      alert(response.data.message);
-      return;
-    }
+    try {
+       const response = await axios.post(`${url}${endpoint}`, payload);
 
-    const token = response.data.token;
-    const profileResponse = await axios.post(`${url}/api/user/getuser`, {}, { headers: { token } });
-    if (!profileResponse.data.success || profileResponse.data.data?.role !== "delivery") {
-      alert("This account is not a delivery account.");
-      return;
-    }
-
-    if(currState === "Sign Up"){
-        setCurrState("Login");
+        if(!response.data.success) {
+        alert(response.data.message);
         return;
-      }
+        }
+
+        if(currState === "Sign Up"){
+            setCurrState("Login");
+            return;
+          }
+
+          window.location.href = `/verifyotp?email=${data.email}`;
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong: Delivery");
+    }
 
     sessionStorage.setItem("delivery_token", token);
     localStorage.setItem("delivery_token", token);

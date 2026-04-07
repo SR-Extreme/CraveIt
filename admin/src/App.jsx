@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthPage from './pages/Auth/AuthPage';
 import { Navigate } from 'react-router-dom';
 import Assignment from './pages/Assignment/Assignment'
+import VerifyOTP from './pages/VerifyOTP/VerifyOTP'
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
       <ToastContainer />
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/verifyotp" element={<VerifyOTP />} />
         <Route
           path="/*"
           element={token ? (

@@ -1,6 +1,6 @@
 import transporter from "../config/mailer.js";
 
-const sendOTP = async (email,otp) =>{
+const sendOTP = async (email,otp,name,role) =>{
     const mailOptions = {
         from: `CraveIt:${process.env.EMAIL_USER}`,
         to:email,
@@ -21,15 +21,23 @@ const sendOTP = async (email,otp) =>{
                 
                 <!-- Header -->
                 <tr>
-                  <td style="background:#2d89ef; color:#ffffff; padding:20px; text-align:center;">
-                    <h2 style="margin:0;">Account Verification</h2>
+                <td style="background:#2d89ef; color:#ffffff; padding:20px; text-align:center;">
+    
+                    <h2 style="margin:0; font-size:22px;">
+                      Account Verification
+                    </h2>
+
+                    <p style="margin:6px 0 0; font-size:14px; color:#dbe9ff;">
+                      ${role === "user" ? "Customer" : role === "delivery" ? "Delivery Agent" : "Admin"}
+                    </p>
+
                   </td>
                 </tr>
 
                 <!-- Body -->
                 <tr>
                   <td style="padding:30px; color:#333333;">
-                    <p style="margin-top:0;">Dear User,</p>
+                    <p style="margin-top:0;">Dear <span style="color:#90EE90;">${name}</span>,</p>
                     
                     <p>
                       We received a request to verify your account. Please use the One-Time Password (OTP) below to proceed:
@@ -52,7 +60,7 @@ const sendOTP = async (email,otp) =>{
 
                     <p style="margin-bottom:0;">
                       Regards,<br/>
-                      <strong>CraveIt</strong>
+                      <strong style="color:#FF9800;">CraveIt</strong>
                     </p>
                   </td>
                 </tr>

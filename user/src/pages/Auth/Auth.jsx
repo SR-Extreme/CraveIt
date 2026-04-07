@@ -47,7 +47,7 @@ const Auth = () => {
             window.location.href = `/verifyotp?email=${data.email}`;
         } catch (error) {
             console.error(error);
-            alert("Something went wrong");
+            alert("Something went wrong: User");
         }
     };
 

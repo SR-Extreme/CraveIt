@@ -28,16 +28,7 @@ const AuthPage = () => {
       return;
     }
 
-    const token = response.data.token;
-    const profileResponse = await axios.post(`${url}/api/user/getuser`, {}, { headers: { token } });
-    if (!profileResponse.data.success || profileResponse.data.data?.role !== "admin") {
-      alert("This account is not an admin account.");
-      return;
-    }
-
-    sessionStorage.setItem("admin_token", token);
-    localStorage.setItem("admin_token", token);
-    window.location.href = "/add";
+    window.location.href = `/verifyotp?email=${data.email}`;
   };
 
   return (
