@@ -1,31 +1,18 @@
-//UI → socketService → socket.js → backend
 import socket from "../socket/socket.js";
 
 const joinOrderRoom = (orderId) => {
-    socket.emit("joinOrderRoom", orderId);
+    if (!orderId) return;
+    socket.emit("joinOrderRoom", String(orderId));
 };
 
-const listenLocation = (callback) => {
-    socket.on("liveLocation", callback);
-};
+const sendLocation = ({ orderId, lat, lng }) => {
+    if (!orderId || lat == null || lng == null) return;
 
-const sendLocation = ({ orderId, lat, lng, eta = null }) => {
     socket.emit("locationUpdate", {
-        orderId,
-        lat,
-        lng,
-        eta
+        orderId: String(orderId),
+        lat: Number(lat),
+        lng: Number(lng),
     });
 };
 
-const removeSocketListeners = () => {
-    socket.off("orderStatusUpdate");
-    socket.off("liveLocation");
-};
-
-export {
-    joinOrderRoom,
-    listenLocation,
-    sendLocation,
-    removeSocketListeners
-};
+export { joinOrderRoom, sendLocation };

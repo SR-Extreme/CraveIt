@@ -1,11 +1,15 @@
-//listens incoming socket events
 import { emitLocationUpdate } from "../services/trackingService.js";
 
-const locationSocket = (socket, io) => {
-    socket.on("locationUpdate", ({ orderId, lat, lng, eta = null }) => {
-        console.log(`Location update for order ${orderId}:`, lat, lng);
+const locationSocket = (socket) => {
+    socket.on("locationUpdate", async (payload = {}) => {
+        const { orderId, lat, lng } = payload;
 
-        emitLocationUpdate(orderId, lat, lng, eta);
+        if (!orderId || lat == null || lng == null) {
+            console.log(`[Socket] Bad locationUpdate from ${socket.id}`);
+            return;
+        }
+
+        await emitLocationUpdate(orderId, Number(lat), Number(lng));
     });
 };
 

@@ -1,39 +1,42 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from "react";
 import "./OrderStatus.css";
 import { useParams } from "react-router-dom";
-import { useState } from 'react';
-import { useEffect } from 'react';
-import axios from 'axios';
-import { StoreContext } from '../../context/StoreContext';
+import axios from "axios";
+import { StoreContext } from "../../context/StoreContext";
+import { TrackingContext } from "../../context/TrackingContext";
+
+const steps = [
+    { key: "Food Processing", label: "Order Placed" },
+    { key: "Assigned", label: "Assigned" },
+    { key: "Picked", label: "Picked Up" },
+    { key: "Out for Delivery", label: "Out for Delivery" },
+    { key: "Delivered", label: "Delivered" },
+];
 
 const OrderStatus = () => {
-    const [status, setStatus] = useState("Food Processing");
     const { orderId } = useParams();
     const { url } = useContext(StoreContext);
-    const [currentStepIndex, setcurrentStepIndex] = useState(0);
+    const { status, setStatus } = useContext(TrackingContext);
 
-    const steps = [
-        { key: "Food Processing", label: "Order Placed" },
-        { key: "Assigned", label: "Assigned" },
-        { key: "Picked", label: "Picked Up" },
-        { key: "Out for Delivery", label: "Out for Delivery" },
-        { key: "Delivered", label: "Delivered" },
-    ];
+    const currentStepIndex = Math.max(
+        0,
+        steps.findIndex((step) => step.key === status)
+    );
 
     const updateTrackOrder = async () => {
-        const response = await axios.post(url + "/api/order/trackorder", { orderId });
-        if (response.data.success) {
-            const latestStatus = response.data.data.status;
-            setStatus(latestStatus);
-            setcurrentStepIndex(steps.findIndex((step) => step.key === latestStatus));
-        } else {
-            toast.error("Error");
+        try {
+            const response = await axios.post(`${url}/api/order/trackorder`, { orderId });
+            if (response.data.success) {
+                setStatus(response.data.data.status);
+            }
+        } catch (error) {
+            console.log("Error fetching order status:", error.message);
         }
-    }
+    };
 
     useEffect(() => {
         updateTrackOrder();
-    }, [])
+    }, [orderId]);
 
     return (
         <div className="order-status-container">
@@ -54,9 +57,11 @@ const OrderStatus = () => {
             <p className="current-status-text">
                 Current Status: <span>{steps[currentStepIndex]?.label || "Unknown"}</span>
             </p>
-            <button onClick={() => updateTrackOrder()}>Refresh Status</button>
+            <button type="button" onClick={updateTrackOrder}>
+                Refresh Status
+            </button>
         </div>
     );
-}
+};
 
-export default OrderStatus
+export default OrderStatus;

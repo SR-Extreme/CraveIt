@@ -1,8 +1,11 @@
-import deliveryModel from "../models/deliveryModel.js"
-import orderModel from "../models/orderModel.js"
+import deliveryModel from "../models/deliveryModel.js";
+import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
+import {
+    emitOrderStatusUpdate,
+    getLastKnownTracking,
+} from "../services/trackingService.js";
 
-//assign delivery partner to order
 const assignDelivery = async (req, res) => {
     try {
         const { orderId, deliveryPartnerId } = req.body;
@@ -24,24 +27,24 @@ const assignDelivery = async (req, res) => {
             status: "Assigned",
         });
 
+        emitOrderStatusUpdate(orderId, "Assigned");
+
         res.json({ success: true, message: "Delivery assigned", data: delivery });
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error assigning delivery" });
     }
-}
+};
 
-//get delivery partner's assigned orders
 const getMyDeliveries = async (req, res) => {
     try {
         const deliveryPartnerId = req.userId;
 
         const deliveries = await deliveryModel
             .find({ deliveryPartnerId })
-            .populate("orderId"); //Replaces the orderId reference with the actual order document
+            .populate("orderId");
 
         res.json({ success: true, data: deliveries });
-
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error fetching deliveries" });
@@ -52,24 +55,38 @@ const updateDeliveryStatus = async (req, res) => {
     try {
         const { orderId, status } = req.body;
 
-        // update delivery
         const delivery = await deliveryModel.findOneAndUpdate(
             { orderId },
             { status, lastUpdated: Date.now() },
-            { new: true } //new: true tells Mongoose to return the UPDATED document instead of the old one.
+            { new: true }
         );
 
         await orderModel.findByIdAndUpdate(orderId, { status });
+        emitOrderStatusUpdate(orderId, status);
 
         res.json({ success: true, message: "Status updated", data: delivery });
-
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error updating status" });
     }
-}
+};
 
-//update the availability
+const getLiveTracking = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const tracking = await getLastKnownTracking(orderId);
+
+        if (!tracking) {
+            return res.json({ success: false, message: "No delivery found for this order" });
+        }
+
+        res.json({ success: true, data: tracking });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error fetching live tracking" });
+    }
+};
+
 const updateAvailability = async (req, res) => {
     const { available } = req.body;
     const userId = req.userId;
@@ -80,10 +97,10 @@ const updateAvailability = async (req, res) => {
         console.log(error);
         return res.json({ success: false, message: "error" });
     }
-}
+};
 
 const updateAvailabilitytoFalse = async (req, res) => {
-    const { available,deliveryId } = req.body;
+    const { available, deliveryId } = req.body;
     try {
         await userModel.findByIdAndUpdate(deliveryId, { available: available });
         return res.json({ success: true, message: "Wait for further Assignment's" });
@@ -91,6 +108,13 @@ const updateAvailabilitytoFalse = async (req, res) => {
         console.log(error);
         return res.json({ success: false, message: "error" });
     }
-}
+};
 
-export { assignDelivery, getMyDeliveries, updateDeliveryStatus, updateAvailability,updateAvailabilitytoFalse }
+export {
+    assignDelivery,
+    getMyDeliveries,
+    updateDeliveryStatus,
+    getLiveTracking,
+    updateAvailability,
+    updateAvailabilitytoFalse,
+};

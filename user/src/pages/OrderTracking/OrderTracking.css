@@ -56,6 +56,12 @@
     font-style: italic;
 }
 
+.destination-hint {
+    margin-top: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
 @media (max-width: 768px) {
     .order-tracking-card {
         padding: 22px;
