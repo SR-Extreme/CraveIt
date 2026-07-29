@@ -1,15 +1,14 @@
 import orderModel from "../models/orderModel.js"
 import userModel from "../models/userModel.js"
+import foodModel from "../models/foodModel.js";
 import Stripe from "stripe"
-import orderRouter from "../routes/orderRoute.js";
-
+import { markOrderPaid } from "../services/orderService.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 //placing user order for frontend
 const placeOrder = async (req, res) => {
-
-    const frontend_url = "http://localhost:5173";
+    const frontend_url = process.env.FRONTEND_URL || "http://localhost:5173";
 
     try {
         const newOrder = new orderModel({
@@ -58,7 +57,7 @@ const verifyOrder = async (req, res) => {
     const { orderId, success } = req.body;
     try {
         if (success == 'true') {
-            await orderModel.findByIdAndUpdate(orderId, { payment: true });
+            await markOrderPaid(orderId);
             res.json({ success: true, message: "paid" })
         }
         else {
@@ -116,4 +115,117 @@ const updateTrackOrder = async (req, res) => {
     }
 }
 
-export { placeOrder, verifyOrder, userOrders, listOrders, updateStatus, updateTrackOrder }
+const getOrderStats = async (req, res) => {
+    try {
+        const paidOrders = await orderModel.find({ payment: true });
+
+        const totalOrders = paidOrders.length;
+        const totalRevenue = paidOrders.reduce(
+            (sum, order) => sum + (order.amount || 0),
+            0
+        );
+
+        const distinctFoodIds = new Set();
+        paidOrders.forEach((order) => {
+            (order.items || []).forEach((item) => {
+                if (item._id) {
+                    distinctFoodIds.add(String(item._id));
+                }
+            });
+        });
+
+        const totalItemsPurchased = distinctFoodIds.size;
+        const averageRevenuePerOrder =
+            totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+        res.json({
+            success: true,
+            data: {
+                totalRevenue,
+                totalOrders,
+                totalItemsPurchased,
+                averageRevenuePerOrder,
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+};
+
+//updates each fod item rating and finally mark rated order.
+const rateOrder = async (req, res) => {
+    try {
+        const { orderId, rating } = req.body;
+        const stars = Number(rating);
+
+        if (!orderId || !Number.isInteger(stars) || stars < 1 || stars > 5) {
+            return res.json({
+                success: false,
+                message: "Invalid rating. Provide orderId and rating 1-5",
+            });
+        }
+
+        const order = await orderModel.findById(orderId);
+
+        if (!order) {
+            return res.json({ success: false, message: "Order not found" });
+        }
+
+        if (String(order.userId) !== String(req.userId)) {
+            return res.json({ success: false, message: "Access denied" });
+        }
+
+        if (order.status !== "Delivered") {
+            return res.json({
+                success: false,
+                message: "Order must be delivered before rating",
+            });
+        }
+
+        if (order.rated) {
+            return res.json({
+                success: false,
+                message: "Order already rated",
+            });
+        }
+
+        const uniqueFoodIds = [
+            ...new Set(
+                (order.items || [])
+                    .filter((item) => item._id)
+                    .map((item) => String(item._id))
+            ),
+        ];
+
+
+        await Promise.all(
+            uniqueFoodIds.map(async (foodId) => {
+                const food = await foodModel.findById(foodId);
+
+                if (!food) return;
+
+                const totalRatingsGiven = (food.totalRatingsGiven || 0) + 1;
+                const totalRating = (food.totalRating || 0) + stars;
+                const averageRating = totalRating / totalRatingsGiven;
+
+                food.totalRatingsGiven = totalRatingsGiven;
+                food.totalRating = totalRating;
+                food.averageRating = averageRating;
+
+                await food.save();
+            })
+        );
+
+        order.rated = true;
+        order.rating = stars;
+        await order.save();
+
+        res.json({ success: true, message: "Rating submitted" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+};
+
+export { placeOrder, verifyOrder, userOrders, listOrders, updateStatus, updateTrackOrder, getOrderStats, rateOrder }

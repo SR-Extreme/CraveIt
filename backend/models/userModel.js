@@ -22,15 +22,19 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["user", "admin", "delivery"],
+        enum: ["user", "admin", "superadmin", "delivery"],
         required: true,
     },
     password: { type: String, required: true },
     cartData: { type: Object, default: {} },
     available: { type: Boolean, default: true },
-    otp:{ type: String},
-    otpExpiry:{ type: Date},
-}, { minimize: false })
+    totalAmountBought: { type: Number, default: 0 },
+    otp: { type: String },
+    otpExpiry: { type: Date },
+}, { minimize: false });
+
+userSchema.index({ role: 1 });
+userSchema.index({ totalAmountBought: -1 });
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);
 export default userModel;

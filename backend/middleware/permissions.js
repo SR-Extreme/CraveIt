@@ -1,10 +1,7 @@
 import userModel from "../models/userModel.js";
+import { hasPermission } from "../utils/permissions.js";
 
-const roleMiddleware = (requiredRoles) => {
-    const allowedRoles = Array.isArray(requiredRoles)
-        ? requiredRoles
-        : [requiredRoles];
-
+const requirePermission = (permission) => {
     return async (req, res, next) => {
         try {
             const user = await userModel.findById(req.userId);
@@ -13,7 +10,7 @@ const roleMiddleware = (requiredRoles) => {
                 return res.json({ success: false, message: "User not found" });
             }
 
-            if (!allowedRoles.includes(user.role)) {
+            if (!hasPermission(user.role, permission)) {
                 return res.json({
                     success: false,
                     message: "Access denied: insufficient permissions",
@@ -25,9 +22,9 @@ const roleMiddleware = (requiredRoles) => {
             next();
         } catch (error) {
             console.log(error);
-            res.json({ success: false, message: "Role check failed" });
+            res.json({ success: false, message: "Permission check failed" });
         }
     };
 };
 
-export default roleMiddleware;
+export default requirePermission;

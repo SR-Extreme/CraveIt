@@ -19,29 +19,47 @@ const loginUser = async (req, res) => {
             return res.json({ success: false, message: "Invalid Credentials" });
         }
 
-        const otp = generateOTP();
+        if (user.role === "admin" || user.role === "superadmin") {
+            const token = createToken(user._id);
+            return res.json({
+                success: true,
+                token,
+                role: user.role,
+                requiresOtp: false,
+            });
+        }
 
+        const otp = generateOTP();
         user.otp = otp;
-        user.otpExpiry = Date.now() + 5*60*1000;
+        user.otpExpiry = Date.now() + 5 * 60 * 1000;
         await user.save();
 
-        await sendOTP(email,otp,user.name,user.role);
+        await sendOTP(email, otp, user.name, user.role);
 
-        res.json({ success: true, message:"OTP sent to successfully to Email" });
+        res.json({ success: true, message: "OTP sent successfully to Email", requiresOtp: true, role: user.role });
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error" });
     }
-}
+};
 
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET);
 }
 
 //register user
-const resgisterUser = async (req, res) => {
+const registerUser = async (req, res) => {
     const { name, password, email, phone, role } = req.body;
     try {
+        const allowedRoles = ["user", "delivery"];
+
+        if (!allowedRoles.includes(role)) {
+            return res.json({
+                success: false,
+                message: "Registration is only allowed for user and delivery agent roles",
+            });
+        }
+
         //checking is user already exists
         const exists = await userModel.findOne({ email });
         if (exists) {
@@ -65,6 +83,7 @@ const resgisterUser = async (req, res) => {
         //hashing user password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
+
         const newUser = new userModel({
             name: name,
             email: email,
@@ -78,6 +97,7 @@ const resgisterUser = async (req, res) => {
         res.json({ success: true, token });
 
     } catch (error) {
+        console.log(error);
         res.json({ success: false, message: "Error" });
     }
 }
@@ -169,35 +189,105 @@ const deleteAddress = async (req, res) => {
     }
 }
 
-const getAllUsers = async (req,res) => {
+const getAllUsers = async (req, res) => {
     try {
-        const Users = await userModel.find({});
-        res.json({success:true,data:Users});
+        const filter = {};
+
+        if (req.query.role) {
+            filter.role = req.query.role;
+        }
+
+        const users = await userModel.find(filter).select("-password -otp");
+        res.json({ success: true, data: users });
     } catch (error) {
         console.log(error);
-        res.json({success:false,message:"Error"});
+        res.json({ success: false, message: "Error" });
     }
 }
 
-const verifyOTP = async(req,res) => {
-    const {otp,email} = req.body;
+const getUserById = async (req, res) => {
     try {
-        const user = await userModel.findOne({email});
+        const user = await userModel.findById(req.params.id).select("-password -otp");
+
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        res.json({ success: true, data: user });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+};
+
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (String(id) === String(req.userId)) {
+            return res.json({
+                success: false,
+                message: "You cannot delete your own account",
+            });
+        }
+
+        const user = await userModel.findById(id);
+
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        if (user.role === "admin" || user.role === "superadmin") {
+            return res.json({
+                success: false,
+                message: "Cannot delete admin accounts",
+            });
+        }
+
+        await userModel.findByIdAndDelete(id);
+        res.json({ success: true, message: "User deleted successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+};
+
+const getTopCustomers = async (req, res) => {
+    try {
+        const customers = await userModel
+            .find({ role: "user" })
+            .select("name email phone totalAmountBought")
+            .sort({ totalAmountBought: -1 })
+            .limit(3);
+
+        res.json({ success: true, data: customers });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+};
+
+const verifyOTP = async (req, res) => {
+    const { otp, email } = req.body;
+    try {
+        const user = await userModel.findOne({ email });
 
         if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
-    return res.json({ success:false , message: "Invalid or expired OTP" });
-  }
+            return res.json({ success: false, message: "Invalid or expired OTP" });
+        }
 
-  user.otp=null;
-  user.otpExpiry = null;
-  await user.save();
+        user.otp = null;
+        user.otpExpiry = null;
+        await user.save();
 
-  const token = createToken(user._id);
+        const token = createToken(user._id);
 
-  res.json({success:true, token:token});
+        res.json({ success: true, token, role: user.role });
     } catch (error) {
         console.log(error);
-        res.json({success:false,message:"Error"});
+        res.json({ success: false, message: "Error" });
     }
 }
-export { loginUser, resgisterUser, getUser, updatePassword, updateAddress, deleteAddress, getAllUsers ,verifyOTP };
+
+
+export { loginUser, registerUser, getUser, updatePassword, updateAddress, deleteAddress, getAllUsers, getUserById, deleteUser, getTopCustomers, verifyOTP };
