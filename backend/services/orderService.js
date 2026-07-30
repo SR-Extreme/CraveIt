@@ -45,7 +45,6 @@ const updateAggregatesOnPaymentSuccess = async (order) => {
     await Promise.all([...foodUpdates, userUpdate]);
 };
 
-
 const markOrderPaid = async (orderId) => {
     const order = await orderModel.findById(orderId);
 

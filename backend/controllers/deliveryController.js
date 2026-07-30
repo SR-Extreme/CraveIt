@@ -1,6 +1,8 @@
 import deliveryModel from "../models/deliveryModel.js";
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
+import generateOTP from "../utils/generateOtp.js";
+import { getIO } from "../config/socket.js";
 import {
     emitOrderStatusUpdate,
     getLastKnownTracking,
@@ -55,11 +57,27 @@ const updateDeliveryStatus = async (req, res) => {
     try {
         const { orderId, status } = req.body;
 
+        if (status === "Delivered") {
+            return res.json({
+                success: false,
+                message: "Use OTP verification to mark order as Delivered",
+            });
+        }
+
+        const allowedStatuses = ["Assigned", "Picked", "Out for Delivery"];
+        if (!allowedStatuses.includes(status)) {
+            return res.json({ success: false, message: "Invalid status" });
+        }
+
         const delivery = await deliveryModel.findOneAndUpdate(
             { orderId },
             { status, lastUpdated: Date.now() },
             { new: true }
         );
+
+        if (!delivery) {
+            return res.json({ success: false, message: "Delivery not found" });
+        }
 
         await orderModel.findByIdAndUpdate(orderId, { status });
         emitOrderStatusUpdate(orderId, status);
@@ -68,6 +86,134 @@ const updateDeliveryStatus = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error updating status" });
+    }
+};
+
+const requestDeliveryOtp = async (req, res) => {
+    try {
+        const { orderId } = req.body;
+
+        const delivery = await deliveryModel.findOne({ orderId });
+
+        if (!delivery) {
+            return res.json({ success: false, message: "Delivery not found" });
+        }
+
+        if (String(delivery.deliveryPartnerId) !== String(req.userId)) {
+            return res.json({ success: false, message: "Access denied" });
+        }
+
+        if (delivery.status === "Delivered") {
+            return res.json({
+                success: false,
+                message: "Order already delivered",
+            });
+        }
+
+        if (delivery.status !== "Out for Delivery") {
+            return res.json({
+                success: false,
+                message: "Order must be Out for Delivery before OTP",
+            });
+        }
+
+        const order = await orderModel.findById(orderId);
+        if (!order) {
+            return res.json({ success: false, message: "Order not found" });
+        }
+
+        const otp = generateOTP();
+        order.deliveryOtp = otp;
+        order.deliveryOtpExpiry = Date.now() + 10 * 60 * 1000;
+        await order.save();
+
+        const roomId = String(orderId);
+        const io = getIO();
+        io.to(roomId).emit("deliveryOtp", {
+            orderId: roomId,
+            deliveryOtp: otp,
+        });
+
+        res.json({
+            success: true,
+            message: "OTP sent to customer. Enter OTP to complete delivery.",
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error generating OTP" });
+    }
+};
+
+const verifyDeliveryOtp = async (req, res) => {
+    try {
+        const { orderId, otp } = req.body;
+
+        if (!orderId || !otp) {
+            return res.json({
+                success: false,
+                message: "orderId and otp are required",
+            });
+        }
+
+        const delivery = await deliveryModel.findOne({ orderId });
+        if (!delivery) {
+            return res.json({ success: false, message: "Delivery not found" });
+        }
+
+        if (String(delivery.deliveryPartnerId) !== String(req.userId)) {
+            return res.json({ success: false, message: "Access denied" });
+        }
+
+        if (delivery.status === "Delivered") {
+            return res.json({
+                success: false,
+                message: "Order already delivered",
+            });
+        }
+
+        const order = await orderModel.findById(orderId);
+        if (!order) {
+            return res.json({ success: false, message: "Order not found" });
+        }
+
+        if (
+            !order.deliveryOtp ||
+            order.deliveryOtp !== String(otp) ||
+            !order.deliveryOtpExpiry ||
+            order.deliveryOtpExpiry < Date.now()
+        ) {
+            return res.json({
+                success: false,
+                message: "Invalid or expired OTP",
+            });
+        }
+
+        order.deliveryOtp = null;
+        order.deliveryOtpExpiry = null;
+        order.status = "Delivered";
+        await order.save();
+
+        delivery.status = "Delivered";
+        delivery.lastUpdated = Date.now();
+        await delivery.save();
+
+        emitOrderStatusUpdate(orderId, "Delivered");
+
+        const roomId = String(orderId);
+        const io = getIO();
+        io.to(roomId).emit("deliveryOtp", {
+            orderId: roomId,
+            deliveryOtp: null,
+        });
+
+        res.json({
+            success: true,
+            message: "OTP verified. Order delivered.",
+            data: delivery,
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error verifying OTP" });
     }
 };
 
@@ -114,6 +260,8 @@ export {
     assignDelivery,
     getMyDeliveries,
     updateDeliveryStatus,
+    requestDeliveryOtp,
+    verifyDeliveryOtp,
     getLiveTracking,
     updateAvailability,
     updateAvailabilitytoFalse,

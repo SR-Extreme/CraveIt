@@ -9,10 +9,11 @@ import cartRouter from "./routes/cartRoute.js"
 import 'dotenv/config.js'
 import orderRouter from "./routes/orderRoute.js"
 import deliveryRouter from "./routes/deliveryRoute.js"
+import categoryRouter from "./routes/categoryRoute.js";
 
 //app config
 const app = express()
-const port = 4000
+const port = process.env.PORT || 4000;
 
 //middleware
 app.use(express.json())
@@ -32,11 +33,12 @@ const startServer = async () => {
 };
 
 //api endpoints
-app.use("/api/food", foodRouter); //creates a route that states “For every request that starts with /api/food, hand it over to foodRouter.”
+app.use("/api/food", foodRouter);
 app.use("/api/user", userRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/delivery", deliveryRouter);
+app.use("/api/category", categoryRouter);
 app.use("/images", express.static('uploads'))
 
 app.get("/", (req, res) => {
@@ -47,4 +49,3 @@ const server = http.createServer(app);
 initSocket(server);
 
 startServer();
-//mongodb+srv://foodapplication:sauravroy@cluster0.xztgd2d.mongodb.net/?
