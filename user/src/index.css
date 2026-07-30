@@ -1,15 +1,45 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
+:root {
+  --color-primary: #ff6a00;
+  --color-primary-dark: #e85d00;
+  --color-primary-soft: #fff3eb;
+  --color-primary-muted: #ffe0cc;
+
+  --color-accent: #111111;
+  --color-accent-soft: #2a2a2a;
+
+  --color-bg: #f7f7f8;
+  --color-surface: #ffffff;
+  --color-border: #ececec;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6b6b;
+  --color-text-light: #9a9a9a;
+
+  --shadow-sm: 0 2px 8px rgba(17, 17, 17, 0.06);
+  --shadow-md: 0 8px 24px rgba(17, 17, 17, 0.08);
+  --shadow-lg: 0 16px 40px rgba(17, 17, 17, 0.1);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: Outfit;
+  font-family: Outfit, sans-serif;
   scroll-behavior: smooth;
 }
 
 body {
   min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 a {
@@ -17,12 +47,16 @@ a {
   color: inherit;
 }
 
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .app {
   width: 80%;
   margin: auto;
 }
 
-/* Full-width shell for /auth so background matches delivery & admin */
 .auth-route-root {
   width: 100%;
   max-width: none;
@@ -30,11 +64,35 @@ a {
 }
 
 @keyframes fadeIn {
-  0% {
+  from {
     opacity: 0;
+    transform: translateY(8px);
   }
 
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softPulse {
+
+  0%,
   100% {
     opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes scrollLeft {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }

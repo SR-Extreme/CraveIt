@@ -1,0 +1,8 @@
+.home {
+    width: 100%;
+    animation: fadeIn 0.4s ease;
+}
+
+.home>*+* {
+    scroll-margin-top: 90px;
+}

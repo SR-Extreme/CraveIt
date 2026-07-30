@@ -1,43 +1,103 @@
-import React from 'react'
-import './Footer.css'
-import { assets } from '../../assets/assets'
-import craveIt_logo from '../../assets/craveIt_logo.png'
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import "./Footer.css";
+import { assets } from "../../assets/assets";
+import craveIt_logo from "../../assets/craveIt_logo.png";
 
 const Footer = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const scrollToSection = (sectionId) => {
+        const el = document.getElementById(sectionId);
+        if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    };
+
+    const handleSectionNav = (sectionId) => {
+        if (location.pathname !== "/") {
+            navigate("/");
+            setTimeout(() => scrollToSection(sectionId), 100);
+        } else {
+            scrollToSection(sectionId);
+        }
+    };
+
     return (
-        <div className='footer' id='footer'>
+        <footer className="footer" id="footer">
             <div className="footer-content">
-                <div className="footer-content-left">
-                    <img src={craveIt_logo} alt="" />
-                    <p>CraveIt brings your favorite meals to your doorstep in minutes. Discover local restaurants, explore diverse cuisines, and satisfy every craving with seamless ordering, real-time tracking, and fast delivery. Fresh flavors, trusted partners, and effortless convenience—CraveIt makes food happiness just a tap away.</p>
-                    <div className="footer-social-icons">
-                        <img src={assets.facebook_icon} alt="" />
-                        <img src={assets.twitter_icon} alt="" />
-                        <img src={assets.linkedin_icon} alt="" />
+                <div className="footer-brand">
+                    <Link to="/">
+                        <img src={craveIt_logo} alt="CraveIt" />
+                    </Link>
+                    <p>
+                        Fresh flavors, fast delivery, and effortless ordering — CraveIt
+                        brings your favorite meals to your doorstep.
+                    </p>
+                    <div className="footer-social-icons" aria-label="Social">
+                        <img src={assets.facebook_icon} alt="Facebook" />
+                        <img src={assets.twitter_icon} alt="Twitter" />
+                        <img src={assets.linkedin_icon} alt="LinkedIn" />
                     </div>
                 </div>
-                <div className="footer-content-center">
-                    <h2>COMPANY</h2>
+
+                <div className="footer-column">
+                    <h2>Navigate</h2>
                     <ul>
-                        <li>Home</li>
-                        <li>About us</li>
-                        <li>Delivery</li>
-                        <li>Privacy policy</li>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/explore">Explore</Link>
+                        </li>
+                        <li>
+                            <button type="button" onClick={() => handleSectionNav("in-demand")}>
+                                Popular
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" onClick={() => handleSectionNav("gallery")}>
+                                Gallery
+                            </button>
+                        </li>
                     </ul>
                 </div>
-                <div className="footer-content-right">
-                    <h2>GET IN TOUCH</h2>
+
+                <div className="footer-column">
+                    <h2>Account</h2>
                     <ul>
-                        <li>+1-232-332-4564</li>
-                        <li>contact@craveit.com</li>
+                        <li>
+                            <Link to="/cart">Cart</Link>
+                        </li>
+                        <li>
+                            <Link to="/myorders">Orders</Link>
+                        </li>
+                        <li>
+                            <Link to="/myprofile">Profile</Link>
+                        </li>
+                    </ul>
+                </div>
+
+                <div className="footer-column">
+                    <h2>Contact</h2>
+                    <ul>
+                        <li>
+                            <a href="tel:+12323324564">+1-232-332-4564</a>
+                        </li>
+                        <li>
+                            <a href="mailto:contact@craveit.com">contact@craveit.com</a>
+                        </li>
                     </ul>
                 </div>
             </div>
+
             <hr />
-            <p className="footer-copyright">Copyright 2026 © craveit.com - All Rights Reserved.</p>
+            <p className="footer-copyright">
+                Copyright {new Date().getFullYear()} © CraveIt — All Rights Reserved.
+            </p>
+        </footer>
+    );
+};
 
-        </div>
-    )
-}
-
-export default Footer
+export default Footer;

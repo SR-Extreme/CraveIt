@@ -1,0 +1,34 @@
+.explore-page {
+    padding: 36px 0 60px;
+    animation: fadeIn 0.45s ease;
+}
+
+.explore-header {
+    margin-bottom: 24px;
+}
+
+.explore-header h1 {
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.explore-header p {
+    margin-top: 8px;
+    font-size: 15px;
+    color: var(--color-text-muted);
+}
+
+.explore-status {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 15px;
+}
+
+.explore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 28px;
+    margin-top: 32px;
+}

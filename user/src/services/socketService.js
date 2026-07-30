@@ -15,14 +15,21 @@ const listenLocation = (callback) => {
     socket.on("liveLocation", callback);
 };
 
+const listenDeliveryOtp = (callback) => {
+    socket.off("deliveryOtp");
+    socket.on("deliveryOtp", callback);
+};
+
 const removeSocketListeners = () => {
     socket.off("orderStatusUpdate");
     socket.off("liveLocation");
+    socket.off("deliveryOtp");
 };
 
 export {
     joinOrderRoom,
     listenOrderStatus,
     listenLocation,
+    listenDeliveryOtp,
     removeSocketListeners,
 };

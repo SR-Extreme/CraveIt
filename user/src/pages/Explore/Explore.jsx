@@ -1,19 +1,16 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import "./Search.css";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
+import "./Explore.css";
 import { StoreContext } from "../../context/StoreContext";
-import FoodItem from "../../components/FoodItem/FoodItem";
 import FoodFilters from "../../components/FoodFilters/FoodFilters";
+import FoodItem from "../../components/FoodItem/FoodItem";
 
-const Search = () => {
-    const location = useLocation();
+const Explore = () => {
     const { url, food_list } = useContext(StoreContext);
 
-    const [foodList, setFoodList] = useState([]);
-    const [searchedQuery, setSearchQuery] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [foods, setFoods] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState({
         category: "All",
         minPrice: 0,
@@ -39,16 +36,10 @@ const Search = () => {
         }
     };
 
-    const fetchFoodList = async (query = searchedQuery, activeFilters = filters) => {
-        if (!query) {
-            setFoodList([]);
-            return;
-        }
-
+    const fetchFoods = async (activeFilters = filters) => {
         setLoading(true);
         try {
             const params = {
-                name: query,
                 minPrice: activeFilters.minPrice,
                 maxPrice: activeFilters.maxPrice,
                 minRating: activeFilters.minRating,
@@ -61,12 +52,12 @@ const Search = () => {
 
             const response = await axios.get(`${url}/api/food/filter`, { params });
             if (response.data.success) {
-                setFoodList(response.data.data || []);
+                setFoods(response.data.data || []);
             } else {
-                setFoodList([]);
+                setFoods([]);
             }
         } catch (error) {
-            setFoodList([]);
+            setFoods(food_list);
         } finally {
             setLoading(false);
         }
@@ -77,11 +68,12 @@ const Search = () => {
     };
 
     const handleApply = () => {
-        fetchFoodList(searchedQuery, filters);
+        fetchFoods(filters);
     };
 
     useEffect(() => {
         fetchCategories();
+        fetchFoods();
     }, [url]);
 
     useEffect(() => {
@@ -90,42 +82,27 @@ const Search = () => {
         }
     }, [fallbackCategories, categories.length]);
 
-    useEffect(() => {
-        const queryParams = new URLSearchParams(location.search);
-        const searchQuery = queryParams.get("q") || "";
-        setSearchQuery(searchQuery);
-    }, [location.search]);
-
-    useEffect(() => {
-        if (searchedQuery !== "") {
-            fetchFoodList(searchedQuery, filters);
-        }
-    }, [searchedQuery]);
-
     return (
-        <div className="search-page">
-            <h2 className="search-title">
-                {searchedQuery
-                    ? `Search Results for "${searchedQuery}"`
-                    : "Search Results"}
-            </h2>
-
-            <div className="search-filters">
-                <FoodFilters
-                    filters={filters}
-                    onChange={handleFilterChange}
-                    onApply={handleApply}
-                    categories={categories}
-                />
+        <div className="explore-page">
+            <div className="explore-header">
+                <h1>Explore</h1>
+                <p>Browse the full menu and filter by what you crave</p>
             </div>
 
-            <div className="search-results">
-                {loading ? (
-                    <p>Loading...</p>
-                ) : foodList.length === 0 ? (
-                    <p>No items found</p>
-                ) : (
-                    foodList.map((item) => (
+            <FoodFilters
+                filters={filters}
+                onChange={handleFilterChange}
+                onApply={handleApply}
+                categories={categories}
+            />
+
+            {loading ? (
+                <p className="explore-status">Loading dishes...</p>
+            ) : foods.length === 0 ? (
+                <p className="explore-status">No dishes match your filters.</p>
+            ) : (
+                <div className="explore-grid">
+                    {foods.map((item) => (
                         <FoodItem
                             key={item._id}
                             id={item._id}
@@ -135,11 +112,11 @@ const Search = () => {
                             image={item.image}
                             averageRating={item.averageRating}
                         />
-                    ))
-                )}
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
 
-export default Search;
+export default Explore;

@@ -1,11 +1,10 @@
 import React from 'react'
 import Navbar from './components/navbar/Navbar'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder'
 import Home from './pages/Home/Home'
 import Cart from './pages/Cart/Cart'
 import Footer from './components/Footer/Footer'
-import AppDownload from './components/AppDownload/AppDownload'
 import LoginPopup from './components/LoginPopup/LoginPopup'
 import { useState } from 'react'
 import Verify from './pages/Verify/Verify'
@@ -16,8 +15,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Profile from './pages/Profile/Profile'
 import OrderTracking from './pages/OrderTracking/OrderTracking'
 import Auth from './pages/Auth/Auth'
-import { useLocation } from 'react-router-dom'
 import VerifyOTP from './pages/VerifyOTP/VerifyOTP'
+import Explore from "./pages/Explore/Explore";
+import FoodDetails from "./pages/FoodDetails/FoodDetails";
 
 const App = () => {
 
@@ -31,6 +31,8 @@ const App = () => {
         {!hideLayout && <Navbar setShowLogin={setShowLogin} />}
         <Routes>
           <Route path='/' element={<Home />}></Route>
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/food/:id" element={<FoodDetails />} />
           <Route path='/auth' element={<Auth />}></Route>
           <Route path='/verifyotp' element={<VerifyOTP />} />
           <Route path='/cart' element={<Cart />}></Route>
@@ -42,11 +44,10 @@ const App = () => {
           <Route path="/track-order/:orderId" element={<OrderTracking />} />
         </Routes>
       </div>
-      {!hideLayout && <AppDownload />}
       {!hideLayout && <Footer />}
       <ToastContainer />
     </>
-  )
-}
+  );
+};
 
 export default App
