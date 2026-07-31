@@ -39,11 +39,11 @@ const LoginPopup = ({ setShowLogin }) => {
             <span className="login-popup-role-label">{currState} as</span>
             <span className="login-popup-role-title">Delivery Agent</span>
           </button>
-          {currState === "Login" && 
-          <button type="button" className="login-popup-role login-popup-role--admin" onClick={(e) => onClickHandler(e, "admin")}>
-            <span className="login-popup-role-label">{currState} as</span>
-            <span className="login-popup-role-title">Admin</span>
-          </button>}
+          {currState === "Login" &&
+            <button type="button" className="login-popup-role login-popup-role--admin" onClick={(e) => onClickHandler(e, "admin")}>
+              <span className="login-popup-role-label">{currState} as</span>
+              <span className="login-popup-role-title">Admin</span>
+            </button>}
         </div>
         <div className="login-popup-footer">
           {currState === "Login" ? (

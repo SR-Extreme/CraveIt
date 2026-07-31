@@ -16,11 +16,20 @@ import categoryRouter from "./routes/categoryRoute.js";
 const app = express()
 const port = process.env.PORT || 4000;
 
+const normalizeOrigin = (value = "") => {
+    const origin = value.trim().replace(/\/$/, "");
+    if (!origin) return "";
+    if (/^https?:\/\//i.test(origin)) return origin;
+    return `https://${origin}`;
+};
+
 const allowedOrigins = [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:5175",
-    ...(process.env.CLIENT_URLS ? process.env.CLIENT_URLS.split(",").map((o) => o.trim()).filter(Boolean) : []),
+    ...(process.env.CLIENT_URLS
+        ? process.env.CLIENT_URLS.split(",").map(normalizeOrigin).filter(Boolean)
+        : []),
 ];
 
 //middleware
@@ -31,7 +40,7 @@ app.use(cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error("Not allowed by CORS"));
+            callback(null, false);
         }
     },
     credentials: true,

@@ -460,8 +460,8 @@ const Auth = () => {
                     {loading
                         ? "Please wait..."
                         : currState === "Login"
-                          ? "Login"
-                          : "Create account"}
+                            ? "Login"
+                            : "Create account"}
                 </button>
 
                 <p>
