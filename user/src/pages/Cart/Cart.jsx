@@ -8,9 +8,17 @@ import { validators } from "../../utils/validation";
 
 const Cart = () => {
 
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, setPromocode, promocode, targetPromocode, setIsCorrectPromo, isCorrectPromo } = useContext(StoreContext);
+  const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, setPromocode, promocode, targetPromocode, setIsCorrectPromo, isCorrectPromo, token } = useContext(StoreContext);
   const navigate = useNavigate();
   const [promoError, setPromoError] = useState("");
+
+  const handleProceedToCheckout = () => {
+    if (!token) {
+      toast.error("Please sign in to proceed to payment");
+      return;
+    }
+    navigate('/order');
+  };
 
   const handlePromoChange = (e) => {
     setPromocode(e.target.value);
@@ -109,7 +117,7 @@ const Cart = () => {
               <b>₹{getTotalCartAmount() === 0 ? 0 : isCorrectPromo ? getTotalCartAmount() - 5 : getTotalCartAmount() + 5}.00</b>
             </div>
           </div>
-          <button onClick={() => navigate('/order')}>PROCEED TO CHECKOUT</button>
+          <button onClick={handleProceedToCheckout}>PROCEED TO CHECKOUT</button>
         </div>
         <div className="cart-promocode">
           <div>

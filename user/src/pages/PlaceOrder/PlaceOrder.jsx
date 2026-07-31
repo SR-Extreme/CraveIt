@@ -3,6 +3,7 @@ import axios from 'axios'
 import './PlaceOrder.css'
 import { StoreContext } from '../../context/StoreContext'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { addressValidators, hasErrors } from '../../utils/validation'
 
 const PlaceOrder = () => {
@@ -79,6 +80,7 @@ const PlaceOrder = () => {
 
   useEffect(() => {
     if (!token) {
+      toast.error("Please sign in to proceed to payment");
       navigate('/cart')
     }
     else if (getTotalCartAmount() === 0) {
