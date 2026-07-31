@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import "./AuthPage.css";
 import { isStaffRole } from "../../utils/permissions";
 import { hasErrors, validators } from "../../utils/validation";
+import getApiUrl from "../../utils/apiUrl";
 
 const AuthPage = () => {
   const [data, setData] = useState({
@@ -16,7 +17,7 @@ const AuthPage = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [resetStep, setResetStep] = useState(null);
-  const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+  const url = getApiUrl();
 
   const getFieldError = (name, value, allData = data) => {
     if (name === "email") return validators.email(value);

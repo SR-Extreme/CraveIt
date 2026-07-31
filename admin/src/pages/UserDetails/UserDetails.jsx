@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import getApiUrl from "../../utils/apiUrl";
 import "./UserDetails.css";
 
 const UserDetails = () => {
@@ -10,7 +11,7 @@ const UserDetails = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+    const url = getApiUrl();
 
 
     useEffect(() => {

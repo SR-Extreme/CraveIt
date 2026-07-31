@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import getApiUrl from "../../utils/apiUrl";
 import "./Users.css";
 
 const Users = () => {
@@ -11,7 +12,7 @@ const Users = () => {
     const [topCustomers, setTopCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+    const url = getApiUrl();
 
 
     const roleQuery = tab === "user" ? "user" : "delivery";

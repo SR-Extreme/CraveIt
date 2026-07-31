@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { validators } from "../../utils/validation";
+import getApiUrl from "../../utils/apiUrl";
 import "../Auth/AuthPage.css";
 
 const VerifyOTP = () => {
@@ -9,7 +10,7 @@ const VerifyOTP = () => {
     const [error, setError] = useState("");
     const [params] = useSearchParams();
     const email = params.get("email");
-    const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+    const url = getApiUrl();
 
     const handleChange = (e) => {
         const value = e.target.value.replace(/\D/g, "").slice(0, 6);

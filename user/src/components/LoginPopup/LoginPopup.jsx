@@ -2,13 +2,19 @@ import React, { useState } from 'react'
 import './LoginPopup.css'
 import { IoClose } from 'react-icons/io5'
 
+const normalizeAppUrl = (value, fallback) => {
+  const raw = String(value || fallback).trim().replace(/\/+$/, "")
+  if (/^https?:\/\//i.test(raw)) return raw
+  return `https://${raw}`
+}
+
 const LoginPopup = ({ setShowLogin }) => {
   const [currState, setCurrState] = useState("Sign Up")
 
   const roleClientUrls = {
-    admin: import.meta.env.VITE_ADMIN_APP_URL || "http://localhost:5174",
-    user: import.meta.env.VITE_USER_APP_URL || "http://localhost:5173",
-    delivery: import.meta.env.VITE_DELIVERY_APP_URL || "http://localhost:5175",
+    admin: normalizeAppUrl(import.meta.env.VITE_ADMIN_APP_URL, "http://localhost:5174"),
+    user: normalizeAppUrl(import.meta.env.VITE_USER_APP_URL, "http://localhost:5173"),
+    delivery: normalizeAppUrl(import.meta.env.VITE_DELIVERY_APP_URL, "http://localhost:5175"),
   }
 
   const onClickHandler = async (event, selectedRole) => {

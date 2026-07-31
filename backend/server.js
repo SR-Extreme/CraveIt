@@ -33,6 +33,12 @@ const allowedOrigins = [
 ];
 
 //middleware
+app.use((req, _res, next) => {
+    if (req.url.includes("//")) {
+        req.url = req.url.replace(/\/{2,}/g, "/");
+    }
+    next();
+});
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({

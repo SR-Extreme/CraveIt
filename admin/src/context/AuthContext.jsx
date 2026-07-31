@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { isStaffRole } from "../utils/permissions";
+import getApiUrl from "../utils/apiUrl";
 
 const AuthContext = createContext(null);
 
-const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const url = getApiUrl();
 
 export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState("");

@@ -1,11 +1,12 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
+import getApiUrl from "../utils/apiUrl";
 
 export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
-    const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+    const url = getApiUrl();
     const [token, setToken] = useState("");
     const [food_list, setFoodList] = useState([]);
     const [promocode, setPromocode] = useState("");

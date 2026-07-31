@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import getApiUrl from "../../utils/apiUrl";
 import "./Profile.css";
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
-    const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+    const url = getApiUrl();
 
 
     useEffect(() => {

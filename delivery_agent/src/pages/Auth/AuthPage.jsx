@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { hasErrors, validators } from "../../utils/validation";
+import getApiUrl from "../../utils/apiUrl";
 import "./AuthPage.css";
 
 const AuthPage = () => {
@@ -21,7 +22,7 @@ const AuthPage = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
-  const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
+  const url = getApiUrl();
 
   const getFieldError = (name, value, allData = data) => {
     switch (name) {
