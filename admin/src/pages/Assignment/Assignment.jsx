@@ -3,62 +3,90 @@ import "./Assignment.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const Assignment = ({url}) => {
+const Assignment = ({ url }) => {
   const [selectedOrder, setSelectedOrder] = useState("");
   const [selectedAgent, setSelectedAgent] = useState("");
-  const token = localStorage.getItem("admin_token");
+  const [orders, setOrders] = useState([]);
+  const [agents, setAgents] = useState([]);
 
-  const [orders,setOrders] = useState([]);
-  const [agents,setAgents]= useState([]);
+  const token =
+    sessionStorage.getItem("admin_token") ||
+    localStorage.getItem("admin_token");
 
-  const handleAssign = async() => {
-    if(!selectedAgent || !selectedOrder){
-        toast.error("Select both order and agent IDs");
-        return;
+  const handleAssign = async () => {
+    if (!selectedAgent || !selectedOrder) {
+      toast.error("Select both order and agent IDs");
+      return;
     }
+
     try {
-        const response = await axios.post(url+"/api/delivery/assign",{orderId:selectedOrder,deliveryPartnerId:selectedAgent},{headers:{token:token}});
-        if(response.data.success){
-            const availResponse = await axios.post(url+"/api/delivery/update-available-false",{deliveryId:response.data.data.deliveryPartnerId,available:false},{headers:{token:token}});
-            const updateResponse = await axios.post(url+"/api/order/status",{orderId:response.data.data.orderId,status:"Assigned"});
-            if(availResponse.data.success && updateResponse.data.success){
-                fetchData();
-                toast.success(`${selectedOrder} has been assigned to ${selectedAgent}`);
-                setSelectedAgent("");
-                setSelectedOrder("");
-            }
+      const response = await axios.post(
+        url + "/api/delivery/assign",
+        { orderId: selectedOrder, deliveryPartnerId: selectedAgent },
+        { headers: { token } }
+      );
+
+      if (response.data.success) {
+        const availResponse = await axios.post(
+          url + "/api/delivery/update-available-false",
+          {
+            deliveryId: response.data.data.deliveryPartnerId,
+            available: false,
+          },
+          { headers: { token } }
+        );
+
+        const updateResponse = await axios.post(
+          url + "/api/order/status",
+          { orderId: response.data.data.orderId, status: "Assigned" },
+          { headers: { token } }
+        );
+
+        if (availResponse.data.success && updateResponse.data.success) {
+          fetchData();
+          toast.success(`${selectedOrder} has been assigned to ${selectedAgent}`);
+          setSelectedAgent("");
+          setSelectedOrder("");
         }
+      } else {
+        toast.error(response.data.message || "Assignment failed");
+      }
     } catch (error) {
-        console.log(error);
-        toast.error("Error");
+      toast.error(error.response?.data?.message || "Error assigning order");
     }
   };
 
-  const fetchData = async () =>{
+  const fetchData = async () => {
     try {
-        const userResponse = await axios.get(url+"/api/user/getallusers",{headers:{token:token}});
-        if(userResponse.data.success){
-            let newUsers = userResponse.data.data.filter((user)=>{
-                return user.role == "delivery" && user.available
-            })
-            setAgents(newUsers);
-        }
+      const userResponse = await axios.get(url + "/api/user/getallusers", {
+        headers: { token },
+      });
 
-        const orderResponse = await axios.get(url+"/api/order/list");
-        if(orderResponse.data.success){
-            let newOrders = orderResponse.data.data.filter((order)=>{
-                return order.status == "Food Processing"
-            })
-            setOrders(newOrders);
-        }
+      if (userResponse.data.success) {
+        const newUsers = userResponse.data.data.filter(
+          (user) => user.role === "delivery" && user.available
+        );
+        setAgents(newUsers);
+      }
+
+      const orderResponse = await axios.get(url + "/api/order/list", {
+        headers: { token },
+      });
+
+      if (orderResponse.data.success) {
+        const newOrders = orderResponse.data.data.filter(
+          (order) => order.status === "Food Processing"
+        );
+        setOrders(newOrders);
+      }
     } catch (error) {
-        toast.error("Error");
+      toast.error(error.response?.data?.message || "Error loading assignment data");
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchData();
-  },[]);
+  }, []);
 
   return (
     <div className="container">
@@ -90,12 +118,12 @@ const Assignment = ({url}) => {
         <div className="list">
           <h3>Orders</h3>
           <div className="scroll">
-            {orders.length===0 && (
-                <p className="empty-message">No orders to be Assigned</p>
+            {orders.length === 0 && (
+              <p className="empty-message">No orders to be Assigned</p>
             )}
-            {orders.map((order, index) => (
+            {orders.map((order) => (
               <div
-                key={index}
+                key={order._id}
                 className={`card ${selectedOrder === order._id ? "selected" : ""}`}
                 onClick={() => setSelectedOrder(order._id)}
               >
@@ -108,13 +136,13 @@ const Assignment = ({url}) => {
         <div className="list">
           <h3>Delivery Agents</h3>
           <div className="scroll">
-            {agents.length===0 && (
-                <p className="empty-message">No orders to be Assigned</p>
+            {agents.length === 0 && (
+              <p className="empty-message">No available agents</p>
             )}
-            {agents.map((agent, index) => (
+            {agents.map((agent) => (
               <div
-                key={index}
-                className={`card ${selectedAgent === agent ? "selected" : ""}`}
+                key={agent._id}
+                className={`card ${selectedAgent === agent._id ? "selected" : ""}`}
                 onClick={() => setSelectedAgent(agent._id)}
               >
                 {agent._id}

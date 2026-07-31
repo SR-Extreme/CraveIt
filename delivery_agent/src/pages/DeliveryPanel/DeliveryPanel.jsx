@@ -11,6 +11,9 @@ const DeliveryPanel = () => {
     const [deliveries, setDeliveries] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [trackingOrderId, setTrackingOrderId] = useState(null);
+    const [otpOrderId, setOtpOrderId] = useState(null);
+    const [otpValue, setOtpValue] = useState("");
+    const [otpLoading, setOtpLoading] = useState(false);
     const watchIdRef = useRef(null);
 
     const stopLiveTracking = () => {
@@ -55,28 +58,81 @@ const DeliveryPanel = () => {
                 if (status === "Out for Delivery") {
                     startLiveTracking(orderId);
                 }
-
-                if (status === "Delivered") {
-                    stopLiveTracking();
-                    try {
-                        const availResponse = await axios.post(
-                            `${url}/api/delivery/update-available-true`,
-                            { available: true },
-                            { headers: { token } }
-                        );
-                        if (availResponse.data.success) {
-                            toast.success(availResponse.data.message);
-                        } else {
-                            toast.error(availResponse.data.message);
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }
+                toast.success("Status updated");
                 fetchMyDeliveries();
+            } else {
+                toast.error(response.data.message || "Failed to update status");
             }
         } catch (error) {
             console.log("Error updating status:", error);
+            toast.error("Failed to update status");
+        }
+    };
+
+    const requestDeliveryOtp = async (orderId) => {
+        setOtpLoading(true);
+        try {
+            const response = await axios.post(
+                `${url}/api/delivery/request-otp`,
+                { orderId },
+                { headers: { token } }
+            );
+
+            if (response.data.success) {
+                setOtpOrderId(String(orderId));
+                setOtpValue("");
+                toast.success(response.data.message || "OTP sent to customer");
+            } else {
+                toast.error(response.data.message || "Could not request OTP");
+            }
+        } catch (error) {
+            toast.error("Could not request OTP");
+        } finally {
+            setOtpLoading(false);
+        }
+    };
+
+    const verifyDeliveryOtp = async (orderId) => {
+        if (!otpValue.trim()) {
+            toast.error("Enter the OTP from the customer");
+            return;
+        }
+
+        setOtpLoading(true);
+        try {
+            const response = await axios.post(
+                `${url}/api/delivery/verify-otp`,
+                { orderId, otp: otpValue.trim() },
+                { headers: { token } }
+            );
+
+            if (response.data.success) {
+                stopLiveTracking();
+                setOtpOrderId(null);
+                setOtpValue("");
+                toast.success("Delivery completed");
+
+                try {
+                    const availResponse = await axios.post(
+                        `${url}/api/delivery/update-available-true`,
+                        { available: true },
+                        { headers: { token } }
+                    );
+                    if (availResponse.data.success) {
+                        toast.success(availResponse.data.message);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+
+                fetchMyDeliveries();
+            } else {
+                toast.error(response.data.message || "Invalid OTP");
+            }
+        } catch (error) {
+            toast.error("OTP verification failed");
+        } finally {
+            setOtpLoading(false);
         }
     };
 
@@ -136,6 +192,7 @@ const DeliveryPanel = () => {
                     deliveries.map((delivery) => {
                         const orderId = delivery.orderId?._id;
                         const isTracking = trackingOrderId === String(orderId);
+                        const showOtpInput = otpOrderId === String(orderId);
 
                         return (
                             <div className="delivery-order-card" key={delivery._id}>
@@ -162,7 +219,9 @@ const DeliveryPanel = () => {
                                     {isTracking ? (
                                         <div className="delivery-row">
                                             <span className="delivery-row__label">Tracking</span>
-                                            <span className="delivery-row__value">Live — sending location</span>
+                                            <span className="delivery-row__value">
+                                                Live — sending location
+                                            </span>
                                         </div>
                                     ) : null}
                                 </div>
@@ -184,9 +243,12 @@ const DeliveryPanel = () => {
 
                                     <button
                                         type="button"
-                                        onClick={() => updateStatus(orderId, "Delivered")}
+                                        disabled={otpLoading}
+                                        onClick={() => requestDeliveryOtp(orderId)}
                                     >
-                                        Delivered
+                                        {otpLoading && showOtpInput
+                                            ? "Please wait..."
+                                            : "Mark Delivered (Request OTP)"}
                                     </button>
 
                                     <button
@@ -200,6 +262,29 @@ const DeliveryPanel = () => {
                                         {isTracking ? "Stop Live Tracking" : "Start Live Tracking"}
                                     </button>
                                 </div>
+
+                                {showOtpInput ? (
+                                    <div className="delivery-otp-box">
+                                        <p>Enter the OTP shown on the customer&apos;s order</p>
+                                        <div className="delivery-otp-row">
+                                            <input
+                                                type="text"
+                                                inputMode="numeric"
+                                                maxLength={6}
+                                                placeholder="6-digit OTP"
+                                                value={otpValue}
+                                                onChange={(e) => setOtpValue(e.target.value)}
+                                            />
+                                            <button
+                                                type="button"
+                                                disabled={otpLoading}
+                                                onClick={() => verifyDeliveryOtp(orderId)}
+                                            >
+                                                Verify OTP
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : null}
                             </div>
                         );
                     })

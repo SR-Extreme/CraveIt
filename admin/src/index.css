@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
 * {
   padding: 0;
@@ -8,15 +8,15 @@
 }
 
 :root {
-  --brand-color: #ff6347;
-  --brand-color-dark: #e8553b;
-  --brand-color-soft: #fff1ed;
-  --bg-main: #f7f8fa;
+  --brand-color: #ff6a00;
+  --brand-color-dark: #e85d00;
+  --brand-color-soft: #fff3eb;
+  --bg-main: #f7f7f8;
   --bg-card: #ffffff;
-  --text-primary: #222222;
-  --text-secondary: #666666;
-  --border-color: #e8e8e8;
-  --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.06);
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b6b6b;
+  --border-color: #ececec;
+  --shadow-soft: 0 8px 24px rgba(17, 17, 17, 0.08);
   --radius-md: 10px;
   --radius-lg: 14px;
 }

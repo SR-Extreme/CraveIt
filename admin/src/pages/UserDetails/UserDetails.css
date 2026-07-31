@@ -1,0 +1,119 @@
+.user-details {
+    width: 100%;
+    max-width: 720px;
+    margin: 28px auto;
+    padding: 0 20px 48px;
+}
+
+.user-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+}
+
+.user-details-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.user-details-header p {
+    margin-top: 4px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.user-details-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.user-details-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 9px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.user-details-btn--back {
+    background: #111;
+    color: #fff;
+}
+
+.user-details-btn--delete {
+    background: var(--brand-color-soft);
+    color: var(--brand-color-dark);
+}
+
+.user-details-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+}
+
+.user-details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-details-row:last-child {
+    border-bottom: none;
+}
+
+.user-details-row--block {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user-details-row span {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-secondary);
+}
+
+.user-details-row strong {
+    font-size: 1rem;
+    color: var(--text-primary);
+    text-align: right;
+}
+
+.user-details-role {
+    text-transform: capitalize;
+    background: var(--brand-color-soft);
+    color: var(--brand-color-dark) !important;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.9rem !important;
+}
+
+.user-details-addresses {
+    list-style: none;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.user-details-addresses li {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.45;
+}

@@ -1,34 +1,70 @@
-import React from 'react'
-import './Sidebar.css'
-import { assets } from '../../assets/assets'
-import { NavLink } from 'react-router-dom'
-import { FaList } from "react-icons/fa";
-import { MdOutlineRestaurantMenu } from "react-icons/md";
-import { MdAddCircleOutline } from "react-icons/md";
+import React from "react";
+import "./Sidebar.css";
+import { assets } from "../../assets/assets";
+import { NavLink } from "react-router-dom";
+import { FaList, FaUsers, FaTags } from "react-icons/fa";
+import { MdOutlineRestaurantMenu, MdAddCircleOutline } from "react-icons/md";
+import { hasPermission, PERMISSIONS } from "../../utils/permissions";
 
 const Sidebar = () => {
+  const role =
+    sessionStorage.getItem("admin_role") ||
+    localStorage.getItem("admin_role") ||
+    "";
+
+  const canManageFoods = hasPermission(role, PERMISSIONS.FOODS_MANAGE);
+  const canManageCategories = hasPermission(role, PERMISSIONS.CATEGORIES_MANAGE);
+  const canManageUsers = hasPermission(role, PERMISSIONS.USERS_MANAGE);
+  const canViewOrders = hasPermission(role, PERMISSIONS.ORDERS_VIEW);
+  const canAssignOrders = hasPermission(role, PERMISSIONS.ORDERS_ASSIGN);
+
   return (
-    <div className='sidebar'>
+    <div className="sidebar">
       <div className="sidebar-options">
-        <NavLink to='/add' className="sidebar-option">
+        {canManageFoods && (
+          <NavLink to="/add" className="sidebar-option">
             <MdAddCircleOutline />
             <p>Add Items</p>
-        </NavLink>
-        <NavLink to='/list' className="sidebar-option">
+          </NavLink>
+        )}
+
+        {canManageFoods && (
+          <NavLink to="/list" className="sidebar-option">
             <FaList />
             <p>List Items</p>
-        </NavLink>
-        <NavLink to='/orders' className="sidebar-option">
+          </NavLink>
+        )}
+
+        {canManageCategories && (
+          <NavLink to="/categories" className="sidebar-option">
+            <FaTags />
+            <p>Categories</p>
+          </NavLink>
+        )}
+
+        {canViewOrders && (
+          <NavLink to="/orders" className="sidebar-option">
             <MdOutlineRestaurantMenu />
             <p>Orders</p>
-        </NavLink>
-        <NavLink to='/assign-orders' className="sidebar-option">
+          </NavLink>
+        )}
+
+        {canAssignOrders && (
+          <NavLink to="/assign-orders" className="sidebar-option">
             <img src={assets.order_icon} alt="" />
             <p>Assign Orders</p>
-        </NavLink>
+          </NavLink>
+        )}
+
+        {canManageUsers && (
+          <NavLink to="/users" className="sidebar-option">
+            <FaUsers />
+            <p>User Management</p>
+          </NavLink>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
