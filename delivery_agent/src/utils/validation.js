@@ -30,6 +30,13 @@ export const validators = {
     return "";
   },
 
+  confirmPassword: (value, password) => {
+    const v = String(value ?? "");
+    if (!v) return "Confirm password is required";
+    if (v !== String(password ?? "")) return "Passwords do not match";
+    return "";
+  },
+
   otp: (value) => {
     const v = trim(value);
     if (!v) return "OTP is required";

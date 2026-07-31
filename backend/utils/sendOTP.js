@@ -1,16 +1,30 @@
 import transporter from "../config/mailer.js";
 
-const sendOTP = async (email,otp,name,role) =>{
+const roleLabel = (role) => {
+    if (role === "user") return "Customer";
+    if (role === "delivery") return "Delivery Agent";
+    return "Admin";
+};
+
+const sendOTP = async (email, otp, name, role, purpose = "login") => {
+    const isReset = purpose === "reset";
+    const title = isReset ? "Password Reset" : "Account Verification";
+    const intro = isReset
+        ? "We received a request to reset your password. Please use the One-Time Password (OTP) below to continue:"
+        : "We received a request to verify your account. Please use the One-Time Password (OTP) below to proceed:";
+
     const mailOptions = {
         from: `CraveIt:${process.env.EMAIL_USER}`,
-        to:email,
-        subject: "Your One-Time Password - CraveIt",
+        to: email,
+        subject: isReset
+            ? "Password Reset OTP - CraveIt"
+            : "Your One-Time Password - CraveIt",
         html: `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="UTF-8" />
-        <title>OTP Verification</title>
+        <title>${title}</title>
       </head>
       <body style="margin:0; padding:0; background-color:#f4f6f8; font-family:Arial, sans-serif;">
         <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding:20px 0;">
@@ -24,11 +38,11 @@ const sendOTP = async (email,otp,name,role) =>{
                 <td style="background:#2d89ef; color:#ffffff; padding:20px; text-align:center;">
     
                     <h2 style="margin:0; font-size:22px;">
-                      Account Verification
+                      ${title}
                     </h2>
 
                     <p style="margin:6px 0 0; font-size:14px; color:#dbe9ff;">
-                      ${role === "user" ? "Customer" : role === "delivery" ? "Delivery Agent" : "Admin"}
+                      ${roleLabel(role)}
                     </p>
 
                   </td>
@@ -40,7 +54,7 @@ const sendOTP = async (email,otp,name,role) =>{
                     <p style="margin-top:0;">Dear <span style="color:#90EE90;">${name}</span>,</p>
                     
                     <p>
-                      We received a request to verify your account. Please use the One-Time Password (OTP) below to proceed:
+                      ${intro}
                     </p>
 
                     <!-- OTP Box -->

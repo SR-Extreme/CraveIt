@@ -123,3 +123,32 @@
   text-decoration: underline;
   color: var(--color-primary-dark);
 }
+
+.forgot-password-link {
+  text-align: right;
+  margin-top: -4px;
+  margin-bottom: 0;
+}
+
+.forgot-password-link span {
+  font-size: 13px;
+}
+
+.role-auth-card button[type="submit"]:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.role-auth-hint {
+  text-align: center;
+  margin-bottom: 4px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.role-auth-hint strong {
+  color: #222;
+  font-weight: 600;
+}

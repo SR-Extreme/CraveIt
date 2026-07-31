@@ -295,5 +295,101 @@ const logoutUser = async (req, res) => {
     res.json({ success: true, message: "Logged out successfully" });
 };
 
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
 
-export { loginUser, registerUser, getUser, updatePassword, updateAddress, deleteAddress, getAllUsers, getUserById, deleteUser, getTopCustomers, verifyOTP, logoutUser };
+    if (!email || !validator.isEmail(email)) {
+        return res.json({ success: false, message: "Please enter a valid email" });
+    }
+
+    try {
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.json({ success: false, message: "User doesn't exist" });
+        }
+
+        const otp = generateOTP();
+        user.otp = otp;
+        user.otpExpiry = Date.now() + 5 * 60 * 1000;
+        await user.save();
+
+        await sendOTP(email, otp, user.name, user.role, "reset");
+
+        res.json({ success: true, message: "OTP sent successfully to Email" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error sending OTP" });
+    }
+};
+
+const verifyResetOtp = async (req, res) => {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+        return res.json({ success: false, message: "Email and OTP are required" });
+    }
+
+    try {
+        const user = await userModel.findOne({ email });
+
+        if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
+            return res.json({ success: false, message: "Invalid or expired OTP" });
+        }
+
+        res.json({ success: true, message: "OTP verified successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+
+    if (!email || !otp || !newPassword) {
+        return res.json({ success: false, message: "All fields are required" });
+    }
+
+    if (newPassword.length < 8) {
+        return res.json({ success: false, message: "Please enter a strong password" });
+    }
+
+    try {
+        const user = await userModel.findOne({ email });
+
+        if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
+            return res.json({ success: false, message: "Invalid or expired OTP" });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        user.password = hashedPassword;
+        user.otp = null;
+        user.otpExpiry = null;
+        await user.save();
+
+        res.json({ success: true, message: "Password reset successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error resetting password" });
+    }
+};
+
+export {
+    loginUser,
+    registerUser,
+    getUser,
+    updatePassword,
+    updateAddress,
+    deleteAddress,
+    getAllUsers,
+    getUserById,
+    deleteUser,
+    getTopCustomers,
+    verifyOTP,
+    logoutUser,
+    forgotPassword,
+    verifyResetOtp,
+    resetPassword,
+};
