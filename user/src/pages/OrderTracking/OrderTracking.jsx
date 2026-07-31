@@ -13,10 +13,19 @@ import {
     removeSocketListeners,
 } from "../../services/socketService";
 
+const STATUS_LABELS = {
+    "Food Processing": "Order Placed",
+    Assigned: "Assigned",
+    Picked: "Picked Up",
+    "Out for Delivery": "Out for Delivery",
+    Delivered: "Order Delivered",
+};
+
 const OrderTracking = () => {
     const { orderId } = useParams();
     const { url } = useContext(StoreContext);
     const {
+        status,
         setStatus,
         setLocation,
         setDestination,
@@ -28,16 +37,34 @@ const OrderTracking = () => {
         distance,
     } = useContext(TrackingContext);
 
+    const isDelivered = status === "Delivered";
+    const isLiveTrackingAvailable = status === "Out for Delivery";
+
     useEffect(() => {
         if (!orderId) return;
 
         let cancelled = false;
 
-        // Clear previous order's marker so refresh never shows a stale/random pin
+        // Clear previous order so refresh never shows a stale status/pin
+        setStatus("Food Processing");
         setLocation(null);
         setDestination(null);
         setEta(null);
         setDistance(null);
+
+        const loadOrderStatus = async () => {
+            try {
+                const response = await axios.post(`${url}/api/order/trackorder`, {
+                    orderId,
+                });
+                if (cancelled || !response.data.success) return;
+                if (response.data.data?.status) {
+                    setStatus(response.data.data.status);
+                }
+            } catch (error) {
+                console.log("Could not load order status:", error.message);
+            }
+        };
 
         const loadSavedTracking = async () => {
             try {
@@ -55,6 +82,7 @@ const OrderTracking = () => {
             }
         };
 
+        loadOrderStatus();
         loadSavedTracking();
         joinOrderRoom(orderId);
 
@@ -93,6 +121,8 @@ const OrderTracking = () => {
         ? "Customer delivery address (marked D on map)"
         : null;
 
+    const statusLabel = STATUS_LABELS[status] || status || "Unknown";
+
     return (
         <div className="order-tracking-page">
             <div className="order-tracking-card">
@@ -100,35 +130,71 @@ const OrderTracking = () => {
                 <p className="tracking-order-id">Order ID: {orderId}</p>
 
                 <OrderStatus />
-                <Map />
 
-                <div className="live-tracking-info">
-                    <h3>Live Delivery Info</h3>
-
-                    {location ? (
-                        <div className="location-box">
-                            <p>
-                                <strong>Agent latitude:</strong> {Number(location.lat).toFixed(5)}
-                            </p>
-                            <p>
-                                <strong>Agent longitude:</strong> {Number(location.lng).toFixed(5)}
-                            </p>
-                            <p>
-                                <strong>Distance left:</strong>{" "}
-                                {distance != null ? `${distance} km` : "Calculating..."}
-                            </p>
-                            <p>
-                                <strong>ETA:</strong>{" "}
-                                {eta != null ? `${eta} mins` : "Calculating..."}
-                            </p>
-                            {addressText ? <p className="destination-hint">{addressText}</p> : null}
-                        </div>
-                    ) : (
-                        <p className="waiting-text">
-                            Waiting for live location updates from the delivery agent...
+                {isDelivered ? (
+                    <div className="live-tracking-info live-tracking-info--delivered">
+                        <h3>Delivery Complete</h3>
+                        <p className="tracking-status-line">
+                            Current status: <span>Order Delivered</span>
                         </p>
-                    )}
-                </div>
+                        <p className="waiting-text">
+                            Your order has been delivered successfully.
+                        </p>
+                    </div>
+                ) : !isLiveTrackingAvailable ? (
+                    <div className="live-tracking-info live-tracking-info--pending">
+                        <h3>Live Tracking</h3>
+                        <p className="tracking-status-line">
+                            Current status: <span>{statusLabel}</span>
+                        </p>
+                        <p className="waiting-text">
+                            Live tracking will be available once your order is Out for
+                            Delivery.
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        <Map />
+
+                        <div className="live-tracking-info">
+                            <h3>Live Delivery Info</h3>
+                            <p className="tracking-status-line">
+                                Current status: <span>{statusLabel}</span>
+                            </p>
+
+                            {location ? (
+                                <div className="location-box">
+                                    <p>
+                                        <strong>Agent latitude:</strong>{" "}
+                                        {Number(location.lat).toFixed(5)}
+                                    </p>
+                                    <p>
+                                        <strong>Agent longitude:</strong>{" "}
+                                        {Number(location.lng).toFixed(5)}
+                                    </p>
+                                    <p>
+                                        <strong>Distance left:</strong>{" "}
+                                        {distance != null
+                                            ? `${distance} km`
+                                            : "Calculating..."}
+                                    </p>
+                                    <p>
+                                        <strong>ETA:</strong>{" "}
+                                        {eta != null ? `${eta} mins` : "Calculating..."}
+                                    </p>
+                                    {addressText ? (
+                                        <p className="destination-hint">{addressText}</p>
+                                    ) : null}
+                                </div>
+                            ) : (
+                                <p className="waiting-text">
+                                    Waiting for live location updates from the delivery
+                                    agent...
+                                </p>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

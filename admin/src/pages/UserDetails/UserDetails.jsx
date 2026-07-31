@@ -11,17 +11,13 @@ const UserDetails = () => {
     const [loading, setLoading] = useState(true);
 
     const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
-    const token =
-        sessionStorage.getItem("admin_token") ||
-        localStorage.getItem("admin_token");
+
 
     useEffect(() => {
         const fetchUser = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${url}/api/user/${id}`, {
-                    headers: { token },
-                });
+                const response = await axios.get(`${url}/api/user/${id}`);
 
                 if (response.data.success) {
                     setUser(response.data.data);
@@ -36,16 +32,14 @@ const UserDetails = () => {
         };
 
         fetchUser();
-    }, [id, url, token]);
+    }, [id, url]);
 
     const handleDelete = async () => {
         const confirmed = window.confirm("Delete this user permanently?");
         if (!confirmed) return;
 
         try {
-            const response = await axios.delete(`${url}/api/user/${id}`, {
-                headers: { token },
-            });
+            const response = await axios.delete(`${url}/api/user/${id}`);
 
             if (response.data.success) {
                 toast.success("User deleted");
@@ -61,7 +55,7 @@ const UserDetails = () => {
     if (loading) {
         return (
             <div className="user-details">
-                <p>Loading user details...</p>
+                <p className="user-details-status">Loading user details...</p>
             </div>
         );
     }
@@ -69,8 +63,13 @@ const UserDetails = () => {
     if (!user) {
         return (
             <div className="user-details">
-                <p>User not found.</p>
-                <button type="button" onClick={() => navigate("/users")}>
+                <p className="user-details-status">User not found.</p>
+                <button
+                    type="button"
+                    className="user-details-btn user-details-btn--back"
+                    onClick={() => navigate("/users")}
+                    style={{ marginTop: 16 }}
+                >
                     Back
                 </button>
             </div>

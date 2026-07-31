@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
 :root {
   --color-primary: #ff6a00;
@@ -11,7 +11,7 @@
 
   --color-bg: #f7f7f8;
   --color-surface: #ffffff;
-  --color-border: #ececec;
+  --color-border: #e5e5e7;
   --color-text: #1a1a1a;
   --color-text-muted: #6b6b6b;
   --color-text-light: #9a9a9a;
@@ -23,6 +23,9 @@
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
+
+  --page-pad: clamp(16px, 5vw, 64px);
+  --page-max: 1280px;
 
   --transition-fast: 0.2s ease;
   --transition-base: 0.3s ease;
@@ -40,6 +43,7 @@ body {
   min-height: 100vh;
   background: var(--color-bg);
   color: var(--color-text);
+  overflow-x: hidden;
 }
 
 a {
@@ -53,8 +57,27 @@ button {
 }
 
 .app {
-  width: 80%;
-  margin: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-body {
+  width: min(var(--page-max), calc(100% - (var(--page-pad) * 2)));
+  margin: 0 auto;
+  padding-bottom: 0;
+}
+
+.app-body--flush {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.page-wrap {
+  width: min(var(--page-max), calc(100% - (var(--page-pad) * 2)));
+  margin: 0 auto;
 }
 
 .auth-route-root {
@@ -76,7 +99,6 @@ button {
 }
 
 @keyframes softPulse {
-
   0%,
   100% {
     opacity: 1;
@@ -95,4 +117,32 @@ button {
   to {
     transform: translateX(-50%);
   }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.field-error {
+  color: #d32f2f;
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.field-invalid,
+input.field-invalid,
+textarea.field-invalid,
+select.field-invalid {
+  border-color: #d32f2f !important;
+}
+
+.field-invalid:focus,
+input.field-invalid:focus,
+textarea.field-invalid:focus,
+select.field-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15) !important;
 }

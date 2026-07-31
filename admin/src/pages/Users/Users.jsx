@@ -6,24 +6,21 @@ import "./Users.css";
 
 const Users = () => {
     const navigate = useNavigate();
-    const [tab, setTab] = useState("customers");
+    const [tab, setTab] = useState("user");
     const [users, setUsers] = useState([]);
     const [topCustomers, setTopCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
-    const token =
-        sessionStorage.getItem("admin_token") ||
-        localStorage.getItem("admin_token");
 
-    const roleQuery = tab === "customers" ? "user" : "delivery";
+
+    const roleQuery = tab === "user" ? "user" : "delivery";
 
     const fetchUsers = async () => {
         setLoading(true);
         try {
             const response = await axios.get(`${url}/api/user/getallusers`, {
                 params: { role: roleQuery },
-                headers: { token },
             });
 
             if (response.data.success) {
@@ -42,9 +39,7 @@ const Users = () => {
 
     const fetchTopCustomers = async () => {
         try {
-            const response = await axios.get(`${url}/api/user/top-customers`, {
-                headers: { token },
-            });
+            const response = await axios.get(`${url}/api/user/top-customers`);
             if (response.data.success) {
                 setTopCustomers(response.data.data || []);
             }
@@ -58,14 +53,12 @@ const Users = () => {
         if (!confirmed) return;
 
         try {
-            const response = await axios.delete(`${url}/api/user/${id}`, {
-                headers: { token },
-            });
+            const response = await axios.delete(`${url}/api/user/${id}`);
 
             if (response.data.success) {
                 toast.success("User deleted");
                 fetchUsers();
-                if (tab === "customers") fetchTopCustomers();
+                if (tab === "user") fetchTopCustomers();
             } else {
                 toast.error(response.data.message || "Delete failed");
             }
@@ -76,7 +69,7 @@ const Users = () => {
 
     useEffect(() => {
         fetchUsers();
-        if (tab === "customers") {
+        if (tab === "user") {
             fetchTopCustomers();
         }
     }, [tab]);
@@ -111,72 +104,74 @@ const Users = () => {
             <div className="users-tabs">
                 <button
                     type="button"
-                    className={tab === "customers" ? "active" : ""}
-                    onClick={() => setTab("customers")}
+                    className={tab === "user" ? "active" : ""}
+                    onClick={() => setTab("user")}
                 >
-                    Customers
+                    Users
                 </button>
                 <button
                     type="button"
-                    className={tab === "agents" ? "active" : ""}
-                    onClick={() => setTab("agents")}
+                    className={tab === "delivery" ? "active" : ""}
+                    onClick={() => setTab("delivery")}
                 >
                     Delivery Agents
                 </button>
             </div>
 
-            {tab === "customers" && (
-                <section className="users-top">
-                    <h3>Top 3 Customers</h3>
-                    <div className="users-top-podium">
-                        {renderTopCard(rank2, 2)}
-                        {renderTopCard(rank1, 1)}
-                        {renderTopCard(rank3, 3)}
-                    </div>
-                </section>
-            )}
+            <div className="users-panel">
+                {tab === "user" && (
+                    <section className="users-top">
+                        <h3>Top 3 Customers</h3>
+                        <div className="users-top-podium">
+                            {renderTopCard(rank2, 2)}
+                            {renderTopCard(rank1, 1)}
+                            {renderTopCard(rank3, 3)}
+                        </div>
+                    </section>
+                )}
 
-            {loading ? (
-                <p className="users-status">Loading users...</p>
-            ) : users.length === 0 ? (
-                <p className="users-status">No users found in this tab.</p>
-            ) : (
-                <div className="users-grid">
-                    {users.map((user) => (
-                        <article className="users-card" key={user._id}>
-                            <div className="users-card-info">
-                                <h4>{user.name}</h4>
-                                <p>{user.email}</p>
-                                <p>{user.phone}</p>
-                                {tab === "customers" && (
-                                    <span>Spent: ₹{user.totalAmountBought || 0}</span>
-                                )}
-                                {tab === "agents" && (
-                                    <span>
-                                        {user.available ? "Available" : "Unavailable"}
-                                    </span>
-                                )}
-                            </div>
-                            <div className="users-card-actions">
-                                <button
-                                    type="button"
-                                    className="users-btn users-btn--view"
-                                    onClick={() => navigate(`/users/${user._id}`)}
-                                >
-                                    View
-                                </button>
-                                <button
-                                    type="button"
-                                    className="users-btn users-btn--delete"
-                                    onClick={() => handleDelete(user._id)}
-                                >
-                                    Delete
-                                </button>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-            )}
+                {loading ? (
+                    <p className="users-status">Loading users...</p>
+                ) : users.length === 0 ? (
+                    <p className="users-status">No users found in this tab.</p>
+                ) : (
+                    <div className="users-list">
+                        {users.map((user) => (
+                            <article className="users-card" key={user._id}>
+                                <div className="users-card-info">
+                                    <h4>{user.name}</h4>
+                                    <p>{user.email}</p>
+                                    <p>{user.phone}</p>
+                                    {tab === "user" && (
+                                        <span>Spent: ₹{user.totalAmountBought || 0}</span>
+                                    )}
+                                    {tab === "delivery" && (
+                                        <span>
+                                            {user.available ? "Available" : "Unavailable"}
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="users-card-actions">
+                                    <button
+                                        type="button"
+                                        className="users-btn users-btn--view"
+                                        onClick={() => navigate(`/users/${user._id}`)}
+                                    >
+                                        View
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="users-btn users-btn--delete"
+                                        onClick={() => handleDelete(user._id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

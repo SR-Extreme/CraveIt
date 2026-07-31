@@ -1,17 +1,18 @@
 .order-status-container {
     width: 100%;
-    background: #fff;
-    padding: 24px;
-    border-radius: 14px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    margin-top: 20px;
+    background: var(--color-bg);
+    padding: 22px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    box-shadow: none;
+    margin-top: 8px;
 }
 
 .order-status-title {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: #222;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 22px;
+    color: var(--color-text);
 }
 
 .order-status-steps {
@@ -29,7 +30,7 @@
     flex: 1;
     min-width: 90px;
     opacity: 0.4;
-    transition: all 0.3s ease;
+    transition: opacity var(--transition-base), transform var(--transition-base);
 }
 
 .status-step.active {
@@ -40,37 +41,43 @@
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: #ddd;
-    color: #333;
+    background: var(--color-border);
+    color: var(--color-text-muted);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     margin-bottom: 10px;
-    transition: all 0.3s ease;
+    transition: background var(--transition-base), color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .status-step.active .status-circle {
-    background: tomato;
-    color: white;
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 106, 0, 0.35);
 }
 
 .status-label {
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
-    color: #444;
+    color: var(--color-text-muted);
     font-weight: 500;
+}
+
+.status-step.active .status-label {
+    color: var(--color-text);
+    font-weight: 600;
 }
 
 .current-status-text {
-    margin-top: 24px;
-    font-size: 16px;
+    margin-top: 22px;
+    font-size: 15px;
     font-weight: 500;
-    color: #333;
+    color: var(--color-text-muted);
 }
 
 .current-status-text span {
-    color: tomato;
+    color: var(--color-primary);
     font-weight: 700;
 }
 
@@ -86,31 +93,29 @@
 }
 
 .order-status-container button {
-    margin-top: 20px;
+    margin-top: 18px;
     padding: 10px 18px;
-    background: tomato;
+    background: var(--color-accent);
     color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: 999px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .order-status-container button:hover {
-    background: #e5533d;
+    background: var(--color-accent-soft);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 188, 152, 0.3);
 }
 
 .order-status-container button:active {
     transform: scale(0.97);
-    box-shadow: none;
 }
 
 .order-status-container button:disabled {
-    background: #ccc;
+    background: var(--color-border);
+    color: var(--color-text-light);
     cursor: not-allowed;
-    box-shadow: none;
 }

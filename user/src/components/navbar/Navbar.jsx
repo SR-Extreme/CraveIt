@@ -17,22 +17,20 @@ const Navbar = ({ setShowLogin }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const logout = () => {
-    sessionStorage.removeItem("user_token");
-    localStorage.removeItem("user_token");
+  const logout = async () => {
+    try {
+      await axios.post(url + "/api/user/logout", {});
+    } catch (error) {
+      console.log(error);
+    }
     setToken("");
+    setUser(null);
     navigate("/");
   };
 
   const getUser = async () => {
-    const storedToken =
-      sessionStorage.getItem("user_token") || localStorage.getItem("user_token");
-    if (!storedToken) return;
-    const response = await axios.post(
-      url + "/api/user/getuser",
-      {},
-      { headers: { token: storedToken } }
-    );
+    if (!token) return;
+    const response = await axios.post(url + "/api/user/getuser", {});
     if (response.data.success) {
       setUser(response.data.data);
     }
@@ -74,7 +72,7 @@ const Navbar = ({ setShowLogin }) => {
 
   return (
     <div className="navbar">
-      <Link to="/" onClick={() => setMenu("home")}>
+      <Link to="/" className="navbar-brand" onClick={() => setMenu("home")}>
         <img src={craveIt_logo} alt="CraveIt" className="logo" />
       </Link>
 

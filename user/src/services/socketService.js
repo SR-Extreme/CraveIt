@@ -16,14 +16,13 @@ const listenLocation = (callback) => {
 };
 
 const listenDeliveryOtp = (callback) => {
-    socket.off("deliveryOtp");
     socket.on("deliveryOtp", callback);
+    return () => socket.off("deliveryOtp", callback);
 };
 
 const removeSocketListeners = () => {
     socket.off("orderStatusUpdate");
     socket.off("liveLocation");
-    socket.off("deliveryOtp");
 };
 
 export {

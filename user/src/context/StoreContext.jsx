@@ -40,11 +40,7 @@ const StoreContextProvider = (props) => {
         setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
 
         if (token) {
-            await axios.post(
-                url + "/api/cart/remove",
-                { itemId },
-                { headers: { token } }
-            );
+            await axios.post(url + "/api/cart/remove", { itemId });
         }
     };
 
@@ -56,11 +52,7 @@ const StoreContextProvider = (props) => {
         }
 
         if (token) {
-            await axios.post(
-                url + "/api/cart/add",
-                { itemId },
-                { headers: { token } }
-            );
+            await axios.post(url + "/api/cart/add", { itemId });
         }
     };
 
@@ -82,24 +74,25 @@ const StoreContextProvider = (props) => {
         setFoodList(response.data.data);
     };
 
-    const loadCartData = async (token) => {
-        const response = await axios.post(
-            url + "/api/cart/get",
-            {},
-            { headers: { token } }
-        );
+    const loadCartData = async () => {
+        const response = await axios.post(url + "/api/cart/get", {});
         setCartItems(response.data.cartData);
     };
 
     useEffect(() => {
         async function loadData() {
+            sessionStorage.removeItem("user_token");
+            localStorage.removeItem("user_token");
+
             await fetchFoodList();
-            const storedToken =
-                sessionStorage.getItem("user_token") ||
-                localStorage.getItem("user_token");
-            if (storedToken) {
-                setToken(storedToken);
-                await loadCartData(storedToken);
+            try {
+                const response = await axios.post(url + "/api/user/getuser", {});
+                if (response.data.success && response.data.data?.role === "user") {
+                    setToken("authenticated");
+                    await loadCartData();
+                }
+            } catch (error) {
+                console.log("No active user session");
             }
         }
         loadData();

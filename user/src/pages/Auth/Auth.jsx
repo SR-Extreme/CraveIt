@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import { hasErrors, validators } from "../../utils/validation";
 import "./Auth.css";
 
 const Auth = () => {
@@ -14,16 +15,59 @@ const Auth = () => {
         phone: "",
         password: "",
     });
+    const [errors, setErrors] = useState({});
 
     const url = "http://localhost:4000";
+
+    const getFieldError = (name, value) => {
+        switch (name) {
+            case "name":
+                return validators.name(value, "Name");
+            case "phone":
+                return validators.phone(value);
+            case "email":
+                return validators.email(value);
+            case "password":
+                return validators.password(value);
+            default:
+                return "";
+        }
+    };
 
     const onChangeHandler = (event) => {
         const { name, value } = event.target;
         setData((prev) => ({ ...prev, [name]: value }));
+        if (errors[name]) {
+            setErrors((prev) => ({ ...prev, [name]: getFieldError(name, value) }));
+        }
+    };
+
+    const onBlurHandler = (event) => {
+        const { name, value } = event.target;
+        setErrors((prev) => ({ ...prev, [name]: getFieldError(name, value) }));
+    };
+
+    const validateForm = () => {
+        const nextErrors = {
+            email: getFieldError("email", data.email),
+            password: getFieldError("password", data.password),
+        };
+        if (currState === "Sign Up") {
+            nextErrors.name = getFieldError("name", data.name);
+            nextErrors.phone = getFieldError("phone", data.phone);
+        }
+        setErrors(nextErrors);
+        return !hasErrors(nextErrors);
+    };
+
+    const switchState = (nextState) => {
+        setCurrState(nextState);
+        setErrors({});
     };
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        if (!validateForm()) return;
 
         const endpoint =
             currState === "Login" ? "/api/user/login" : "/api/user/register";
@@ -39,11 +83,12 @@ const Auth = () => {
                 return;
             }
 
-            if(currState === "Sign Up"){
+            if (currState === "Sign Up") {
                 setCurrState("Login");
+                setErrors({});
                 return;
             }
-        
+
             window.location.href = `/verifyotp?email=${data.email}`;
         } catch (error) {
             console.error(error);
@@ -53,51 +98,67 @@ const Auth = () => {
 
     return (
         <div className="role-auth-page">
-            <form className="role-auth-card" onSubmit={onSubmit} autoComplete="off">
+            <form className="role-auth-card" onSubmit={onSubmit} autoComplete="off" noValidate>
                 <h2>{currState} as User</h2>
 
                 {currState === "Sign Up" && (
                     <>
-                        <input
-                            type="text"
-                            name="name"
-                            value={data.name}
-                            onChange={onChangeHandler}
-                            placeholder="Name"
-                            autoComplete="off"
-                            required
-                        />
-                        <input
-                            type="text"
-                            name="phone"
-                            value={data.phone}
-                            onChange={onChangeHandler}
-                            placeholder="Phone"
-                            autoComplete="off"
-                            required
-                        />
+                        <div className="form-field">
+                            <input
+                                type="text"
+                                name="name"
+                                value={data.name}
+                                onChange={onChangeHandler}
+                                onBlur={onBlurHandler}
+                                placeholder="Name"
+                                autoComplete="off"
+                                className={errors.name ? "field-invalid" : ""}
+                            />
+                            {errors.name ? <p className="field-error">{errors.name}</p> : null}
+                        </div>
+                        <div className="form-field">
+                            <input
+                                type="text"
+                                name="phone"
+                                value={data.phone}
+                                onChange={onChangeHandler}
+                                onBlur={onBlurHandler}
+                                placeholder="Phone"
+                                autoComplete="off"
+                                className={errors.phone ? "field-invalid" : ""}
+                            />
+                            {errors.phone ? <p className="field-error">{errors.phone}</p> : null}
+                        </div>
                     </>
                 )}
 
-                <input
-                    type="email"
-                    name="email"
-                    value={data.email}
-                    onChange={onChangeHandler}
-                    placeholder="Email"
-                    autoComplete={currState === "Login" ? "username" : "off"}
-                    required
-                />
+                <div className="form-field">
+                    <input
+                        type="email"
+                        name="email"
+                        value={data.email}
+                        onChange={onChangeHandler}
+                        onBlur={onBlurHandler}
+                        placeholder="Email"
+                        autoComplete={currState === "Login" ? "username" : "off"}
+                        className={errors.email ? "field-invalid" : ""}
+                    />
+                    {errors.email ? <p className="field-error">{errors.email}</p> : null}
+                </div>
 
-                <input
-                    type="password"
-                    name="password"
-                    value={data.password}
-                    onChange={onChangeHandler}
-                    placeholder="Password"
-                    autoComplete={currState === "Login" ? "current-password" : "new-password"}
-                    required
-                />
+                <div className="form-field">
+                    <input
+                        type="password"
+                        name="password"
+                        value={data.password}
+                        onChange={onChangeHandler}
+                        onBlur={onBlurHandler}
+                        placeholder="Password"
+                        autoComplete={currState === "Login" ? "current-password" : "new-password"}
+                        className={errors.password ? "field-invalid" : ""}
+                    />
+                    {errors.password ? <p className="field-error">{errors.password}</p> : null}
+                </div>
 
                 <button type="submit">
                     {currState === "Login" ? "Login" : "Create account"}
@@ -107,7 +168,7 @@ const Auth = () => {
                     {currState === "Login" ? "Need an account?" : "Already registered?"}{" "}
                     <span
                         onClick={() =>
-                            setCurrState(currState === "Login" ? "Sign Up" : "Login")
+                            switchState(currState === "Login" ? "Sign Up" : "Login")
                         }
                     >
                         {currState === "Login" ? "Sign up" : "Login"}

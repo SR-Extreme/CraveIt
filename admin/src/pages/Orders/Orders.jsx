@@ -10,18 +10,12 @@ const Orders = ({ url }) => {
     totalRevenue: 0,
     totalOrders: 0,
     totalItemsPurchased: 0,
-    averageRevenuePerOrder: 0,
-  });
+    averageRevenuePerOrder: 0});
 
-  const token =
-    sessionStorage.getItem("admin_token") ||
-    localStorage.getItem("admin_token");
 
   const fetchAllOrders = async () => {
     try {
-      const response = await axios.get(url + "/api/order/list", {
-        headers: { token },
-      });
+      const response = await axios.get(url + "/api/order/list");
       if (response.data.success) {
         setOrders(response.data.data || []);
       } else {
@@ -34,32 +28,12 @@ const Orders = ({ url }) => {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get(url + "/api/order/stats", {
-        headers: { token },
-      });
+      const response = await axios.get(url + "/api/order/stats");
       if (response.data.success) {
         setStats(response.data.data);
       }
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const updateOrderStatus = async (orderId, status) => {
-    try {
-      const response = await axios.post(
-        url + "/api/order/status",
-        { orderId, status },
-        { headers: { token } }
-      );
-      if (response.data.success) {
-        await fetchAllOrders();
-        await fetchStats();
-      } else {
-        toast.error(response.data.message || "Failed to update status");
-      }
-    } catch (error) {
-      toast.error("Failed to update status");
     }
   };
 
@@ -69,8 +43,11 @@ const Orders = ({ url }) => {
   }, []);
 
   return (
-    <div className="order add">
-      <h3>Order Management</h3>
+    <div className="order">
+      <div className="order-header">
+        <h2>Order Management</h2>
+        <p>Track revenue and view order statuses</p>
+      </div>
 
       <div className="order-stats">
         <div className="order-stat-card">
@@ -125,16 +102,7 @@ const Orders = ({ url }) => {
             </div>
             <p>Items: {order.items.length}</p>
             <p>₹{order.amount}</p>
-            <select
-              value={order.status}
-              onChange={(e) => updateOrderStatus(order._id, e.target.value)}
-            >
-              <option value="Food Processing">Food Processing</option>
-              <option value="Assigned">Assigned</option>
-              <option value="Picked">Picked</option>
-              <option value="Out for Delivery">Out for Delivery</option>
-              <option value="Delivered">Delivered</option>
-            </select>
+            <p className="order-item-status">{order.status}</p>
           </div>
         ))}
       </div>

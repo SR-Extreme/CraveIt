@@ -18,31 +18,37 @@ import Auth from './pages/Auth/Auth'
 import VerifyOTP from './pages/VerifyOTP/VerifyOTP'
 import Explore from "./pages/Explore/Explore";
 import FoodDetails from "./pages/FoodDetails/FoodDetails";
+import DeliveryOtpNotifier from "./components/DeliveryOtpNotifier/DeliveryOtpNotifier";
 
 const App = () => {
 
   const [showLogin, setShowLogin] = useState(false);
   const location = useLocation();
   const hideLayout = location.pathname === "/auth" || location.pathname === "/verifyotp";
+  const isHome = location.pathname === "/";
+
   return (
     <>
       {showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
+      <DeliveryOtpNotifier />
       <div className={hideLayout ? "auth-route-root" : "app"}>
         {!hideLayout && <Navbar setShowLogin={setShowLogin} />}
-        <Routes>
-          <Route path='/' element={<Home />}></Route>
-          <Route path="/explore" element={<Explore />} />
-          <Route path="/food/:id" element={<FoodDetails />} />
-          <Route path='/auth' element={<Auth />}></Route>
-          <Route path='/verifyotp' element={<VerifyOTP />} />
-          <Route path='/cart' element={<Cart />}></Route>
-          <Route path='/order' element={<PlaceOrder />}></Route>
-          <Route path='/verify' element={<Verify />} />
-          <Route path='/myorders' element={<MyOrders />} />
-          <Route path='/myprofile' element={<Profile />} />
-          <Route path='/search' element={<Search />} />
-          <Route path="/track-order/:orderId" element={<OrderTracking />} />
-        </Routes>
+        <div className={hideLayout ? undefined : isHome ? "app-body app-body--flush" : "app-body"}>
+          <Routes>
+            <Route path='/' element={<Home />}></Route>
+            <Route path="/explore" element={<Explore />} />
+            <Route path="/food/:id" element={<FoodDetails />} />
+            <Route path='/auth' element={<Auth />}></Route>
+            <Route path='/verifyotp' element={<VerifyOTP />} />
+            <Route path='/cart' element={<Cart />}></Route>
+            <Route path='/order' element={<PlaceOrder />}></Route>
+            <Route path='/verify' element={<Verify />} />
+            <Route path='/myorders' element={<MyOrders />} />
+            <Route path='/myprofile' element={<Profile />} />
+            <Route path='/search' element={<Search />} />
+            <Route path="/track-order/:orderId" element={<OrderTracking />} />
+          </Routes>
+        </div>
       </div>
       {!hideLayout && <Footer />}
       <ToastContainer />

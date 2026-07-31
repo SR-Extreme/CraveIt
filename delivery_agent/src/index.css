@@ -1,14 +1,49 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
+:root {
+  --color-primary: #ff6a00;
+  --color-primary-dark: #e85d00;
+  --color-primary-soft: #fff3eb;
+  --color-primary-muted: #ffe0cc;
+
+  --color-accent: #111111;
+  --color-accent-soft: #2a2a2a;
+
+  --color-bg: #f7f7f8;
+  --color-surface: #ffffff;
+  --color-border: #e5e5e7;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6b6b;
+  --color-text-light: #9a9a9a;
+
+  --shadow-sm: 0 2px 8px rgba(17, 17, 17, 0.06);
+  --shadow-md: 0 8px 24px rgba(17, 17, 17, 0.08);
+  --shadow-lg: 0 16px 40px rgba(17, 17, 17, 0.1);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --page-pad: clamp(16px, 5vw, 64px);
+  --page-max: 1280px;
+
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   font-family: Outfit, sans-serif;
+  scroll-behavior: smooth;
 }
 
 body {
   min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  overflow-x: hidden;
 }
 
 a {
@@ -16,7 +51,47 @@ a {
   color: inherit;
 }
 
-.app {
-  width: 80%;
-  margin: auto;
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.field-error {
+  color: #d32f2f;
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.field-invalid,
+input.field-invalid,
+textarea.field-invalid,
+select.field-invalid {
+  border-color: #d32f2f !important;
+}
+
+.field-invalid:focus,
+input.field-invalid:focus,
+textarea.field-invalid:focus,
+select.field-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15) !important;
 }

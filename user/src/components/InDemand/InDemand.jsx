@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./InDemand.css";
 import { StoreContext } from "../../context/StoreContext";
+import { getImageUrl } from "../../utils/imageUrl";
 
 const InDemand = () => {
     const { url } = useContext(StoreContext);
@@ -52,7 +53,7 @@ const InDemand = () => {
             >
                 <span className="in-demand-rank">#{rank}</span>
                 <img
-                    src={`${url}/images/${food.image}`}
+                    src={getImageUrl(food.image)}
                     alt={food.name}
                     className="in-demand-image"
                 />

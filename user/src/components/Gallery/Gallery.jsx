@@ -1,12 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./Gallery.css";
 import { StoreContext } from "../../context/StoreContext";
+import { getImageUrl } from "../../utils/imageUrl";
 
 const Gallery = () => {
-    const { url, food_list } = useContext(StoreContext);
+    const { food_list } = useContext(StoreContext);
     const [isOpen, setIsOpen] = useState(false);
 
-    const images = food_list.filter((item) => item.image);
+    const images = food_list.filter(
+        (item) =>
+            typeof item.image === "string" && /^https?:\/\//i.test(item.image)
+    );
     const previewCount = 8;
     const previewImages = images.slice(0, previewCount);
     const remaining = Math.max(images.length - previewCount, 0);
@@ -53,7 +57,7 @@ const Gallery = () => {
                             }}
                         >
                             <img
-                                src={`${url}/images/${item.image}`}
+                                src={getImageUrl(item.image)}
                                 alt={item.name}
                                 loading="lazy"
                             />
@@ -86,7 +90,7 @@ const Gallery = () => {
                             {images.map((item) => (
                                 <div className="gallery-modal-item" key={item._id}>
                                     <img
-                                        src={`${url}/images/${item.image}`}
+                                        src={getImageUrl(item.image)}
                                         alt={item.name}
                                         loading="lazy"
                                     />

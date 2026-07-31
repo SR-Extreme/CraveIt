@@ -2,13 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./List.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { getImageUrl } from "../../utils/imageUrl";
 
 const List = ({ url }) => {
   const [list, setList] = useState([]);
 
-  const token =
-    sessionStorage.getItem("admin_token") ||
-    localStorage.getItem("admin_token");
 
   const fetchList = async () => {
     try {
@@ -27,8 +25,7 @@ const List = ({ url }) => {
     try {
       const response = await axios.post(
         `${url}/api/food/remove`,
-        { id: foodId },
-        { headers: { token } }
+        { id: foodId }
       );
 
       if (response.data.success) {
@@ -47,8 +44,11 @@ const List = ({ url }) => {
   }, []);
 
   return (
-    <div className="list add flex-col">
-      <p>All Foods List</p>
+    <div className="list">
+      <div className="list-header">
+        <h2>List Items</h2>
+        <p>Browse and remove items from the menu</p>
+      </div>
       <div className="list-table">
         <div className="list-table-format title">
           <b>Image</b>
@@ -60,12 +60,12 @@ const List = ({ url }) => {
         {list.map((item) => {
           return (
             <div key={item._id} className="list-table-format">
-              <img src={`${url}/images/` + item.image} alt="" />
+              <img src={getImageUrl(item.image)} alt="" />
               <p>{item.name}</p>
               <p>{item.category}</p>
-              <p>{item.price}</p>
+              <p>₹{item.price}</p>
               <button onClick={() => removeFood(item._id)} className="cross">
-                REMOVE
+                Remove
               </button>
             </div>
           );

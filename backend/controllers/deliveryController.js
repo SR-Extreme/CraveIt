@@ -64,9 +64,38 @@ const updateDeliveryStatus = async (req, res) => {
             });
         }
 
-        const allowedStatuses = ["Assigned", "Picked", "Out for Delivery"];
-        if (!allowedStatuses.includes(status)) {
+        const nextStatusMap = {
+            Assigned: "Picked",
+            Picked: "Out for Delivery",
+        };
+
+        if (!["Picked", "Out for Delivery"].includes(status)) {
             return res.json({ success: false, message: "Invalid status" });
+        }
+
+        const existing = await deliveryModel.findOne({ orderId });
+
+        if (!existing) {
+            return res.json({ success: false, message: "Delivery not found" });
+        }
+
+        if (String(existing.deliveryPartnerId) !== String(req.userId)) {
+            return res.json({ success: false, message: "Access denied" });
+        }
+
+        const expectedNext = nextStatusMap[existing.status];
+        if (!expectedNext) {
+            return res.json({
+                success: false,
+                message: "No further status updates allowed from current state",
+            });
+        }
+
+        if (status !== expectedNext) {
+            return res.json({
+                success: false,
+                message: `Can only advance to "${expectedNext}" from "${existing.status}"`,
+            });
         }
 
         const delivery = await deliveryModel.findOneAndUpdate(
@@ -74,10 +103,6 @@ const updateDeliveryStatus = async (req, res) => {
             { status, lastUpdated: Date.now() },
             { new: true }
         );
-
-        if (!delivery) {
-            return res.json({ success: false, message: "Delivery not found" });
-        }
 
         await orderModel.findByIdAndUpdate(orderId, { status });
         emitOrderStatusUpdate(orderId, status);

@@ -1,5 +1,6 @@
 import express from "express"
 import cors from "cors"
+import cookieParser from "cookie-parser"
 import http from "http";
 import { initSocket } from "./config/socket.js";
 import { connectDB } from "./config/db.js"
@@ -15,9 +16,26 @@ import categoryRouter from "./routes/categoryRoute.js";
 const app = express()
 const port = process.env.PORT || 4000;
 
+const allowedOrigins = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
+    ...(process.env.CLIENT_URLS ? process.env.CLIENT_URLS.split(",").map((o) => o.trim()).filter(Boolean) : []),
+];
+
 //middleware
 app.use(express.json())
-app.use(cors())
+app.use(cookieParser())
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+}))
 
 //db connection
 const startServer = async () => {
@@ -39,13 +57,12 @@ app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/delivery", deliveryRouter);
 app.use("/api/category", categoryRouter);
-app.use("/images", express.static('uploads'))
 
 app.get("/", (req, res) => {
     res.send("API Working")
 })
 
 const server = http.createServer(app);
-initSocket(server);
+initSocket(server, allowedOrigins);
 
 startServer();

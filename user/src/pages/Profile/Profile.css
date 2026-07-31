@@ -1,7 +1,10 @@
 .profile {
-    margin-top: 40px;
+    margin-top: 28px;
+    margin-bottom: 0;
+    padding-bottom: 24px;
     display: flex;
     justify-content: center;
+    animation: fadeIn 0.45s ease;
 }
 
 .profile-container {
@@ -9,38 +12,47 @@
     max-width: 900px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 24px;
     text-align: left;
 }
 
 .profile-container h2 {
-    font-size: 32px;
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 0;
+    color: var(--color-text);
+}
+
+.profile-subtitle {
+    margin: 8px 0 4px;
+    font-size: 15px;
+    color: var(--color-text-muted);
 }
 
 .profile-card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0px 0px 10px #00000015;
-    padding: 20px 24px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    padding: 22px 24px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .profile-card h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 4px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+    color: var(--color-text);
 }
 
 .profile-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .profile-row:last-child {
@@ -49,12 +61,14 @@
 
 .profile-row span {
     font-weight: 500;
-    color: #555;
+    color: var(--color-text-muted);
+    font-size: 14px;
 }
 
 .profile-row p {
     margin: 0;
-    color: #222;
+    color: var(--color-text);
+    font-weight: 600;
 }
 
 .profile-card-header {
@@ -65,9 +79,9 @@
 }
 
 .address-item {
-    border: 1px solid #e9e9e9;
-    background: linear-gradient(180deg, #ffffff 0%, #fbfbfb 100%);
-    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    border-radius: var(--radius-sm);
     padding: 16px 18px;
     padding-right: 56px;
     display: flex;
@@ -76,9 +90,15 @@
     gap: 16px;
     width: 100%;
     position: relative;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.address-item+.address-item {
+.address-item:hover {
+    border-color: var(--color-primary-muted);
+    box-shadow: var(--shadow-sm);
+}
+
+.address-item + .address-item {
     margin-top: 10px;
 }
 
@@ -101,19 +121,18 @@
 .address-name {
     margin: 0;
     font-weight: 600;
-    color: #222;
+    color: var(--color-text);
     font-size: 15px;
     line-height: 1.25;
-    white-space: normal;
 }
 
 .address-phone {
     flex: 0 0 auto;
     font-size: 12px;
-    color: #444;
-    border: 1px solid #ececec;
-    background: #fff;
-    padding: 4px 8px;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    padding: 4px 10px;
     border-radius: 999px;
     white-space: nowrap;
 }
@@ -123,20 +142,20 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #666;
+    color: var(--color-text-muted);
     font-size: 12.5px;
 }
 
 .address-phone-label {
-    color: #777;
+    color: var(--color-text-light);
     font-weight: 600;
 }
 
 .address-line {
     margin: 0;
-    color: #555;
+    color: var(--color-text-muted);
     font-size: 13.5px;
-    line-height: 1.35;
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
@@ -155,15 +174,15 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 20px;
-    height: 20px;
-    min-width: 25px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
     padding: 0;
     margin: 0;
-    border-radius: 10px;
-    border: 1px solid #e8e8e8;
-    background: #ffffff;
-    color: #555;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -171,21 +190,20 @@
     font-weight: 600;
     line-height: 1;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
 }
 
 .address-remove-btn:hover {
-    background: #fafafa;
-    border-color: #dddddd;
-    color: #333;
-}
-
-.address-remove-btn:active {
-    transform: scale(0.98);
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
 }
 
 .address-remove-btn:focus-visible {
-    outline: 2px solid rgba(255, 99, 71, 0.45);
+    outline: 2px solid var(--color-primary-muted);
     outline-offset: 1px;
 }
 
@@ -193,55 +211,66 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    align-items: center;
+    align-items: stretch;
 }
 
 .profile-card input[type="password"] {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 4px;
-    border: 1px solid #c5c5c5;
-    outline-color: tomato;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    outline: none;
     font-size: 14px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.profile-card input[type="password"]:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-muted);
+    background: var(--color-surface);
 }
 
 .profile-card button:not(.profile-btn):not(.address-remove-btn),
-.profile-card>button:not(.profile-btn):not(.address-remove-btn) {
+.profile-card > button:not(.profile-btn):not(.address-remove-btn) {
     border: none;
     color: #ffffff;
-    background-color: tomato;
-    padding: 10px 24px;
-    border-radius: 4px;
+    background-color: var(--color-primary);
+    padding: 11px 22px;
+    border-radius: 999px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     margin-top: 8px;
     width: auto;
     min-width: 160px;
-    align-self: center;
+    align-self: flex-start;
+    transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .profile-card button:not(.profile-btn):not(.address-remove-btn):hover,
-.profile-card>button:not(.profile-btn):not(.address-remove-btn):hover {
-    opacity: 0.95;
+.profile-card > button:not(.profile-btn):not(.address-remove-btn):hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
 }
 
-/* Buttons used in profile cards + modal */
 .profile-btn {
     border: none;
     color: #ffffff;
-    background-color: tomato;
+    background-color: var(--color-primary);
     padding: 10px 18px;
-    border-radius: 10px;
+    border-radius: 999px;
     cursor: pointer;
     font-weight: 600;
     width: auto;
     min-width: unset;
     align-self: auto;
-    box-shadow: 0px 8px 18px #ff634733;
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .profile-btn:hover {
-    opacity: 0.95;
+    background: var(--color-primary-dark);
 }
 
 .profile-btn:active {
@@ -249,42 +278,50 @@
 }
 
 .profile-btn-secondary {
-    background: #ffffff;
-    color: #333;
-    border: 1px solid #e6e6e6;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
     box-shadow: none;
 }
 
+.profile-btn-secondary:hover {
+    background: var(--color-bg);
+    border-color: var(--color-accent);
+}
+
 .profile-btn-default {
-    background: #22c55e;
-    border-color: #22c55e;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
     color: #ffffff;
 }
 
 .profile-btn-default:hover {
-    opacity: 0.95;
+    background: var(--color-accent-soft);
 }
 
 .profile-btn-sm {
-    padding: 8px 12px;
-    border-radius: 10px;
+    padding: 8px 14px;
     font-size: 13px;
 }
 
 .profile-btn-xs {
-    padding: 7px 10px;
-    border-radius: 10px;
+    padding: 7px 12px;
     font-size: 12px;
     font-weight: 600;
 }
 
-/* Modal for "Delivery Information" */
+.profile-empty {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
 .profile-modal-overlay {
     position: fixed;
     inset: 0;
     z-index: 1000;
-    background: rgba(15, 15, 20, 0.55);
-    backdrop-filter: blur(3px);
+    background: rgba(17, 17, 17, 0.5);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -293,11 +330,12 @@
 
 .profile-modal {
     width: min(680px, 100%);
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 99, 71, 0.18);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border);
     overflow: hidden;
+    animation: fadeIn 0.3s ease;
 }
 
 .profile-modal-header {
@@ -305,37 +343,40 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 14px 16px;
-    background: linear-gradient(180deg, rgba(255, 99, 71, 0.10), rgba(255, 99, 71, 0.02));
-    border-bottom: 1px solid #f2f2f2;
+    padding: 16px 18px;
+    background: var(--color-primary-soft);
+    border-bottom: 1px solid var(--color-primary-muted);
 }
 
 .profile-modal-title {
     margin: 0;
     font-size: 16px;
     font-weight: 700;
-    color: #222;
+    color: var(--color-text);
 }
 
 .profile-icon-btn {
-    border: 1px solid #ececec;
-    background: #ffffff;
-    color: #333;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
     width: 34px;
     height: 34px;
-    border-radius: 10px;
+    border-radius: 999px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .profile-icon-btn:hover {
-    background: #fafafa;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
 }
 
 .profile-address-form {
-    padding: 16px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -343,16 +384,20 @@
 
 .profile-address-form input {
     width: 100%;
-    padding: 11px 12px;
-    border-radius: 10px;
-    border: 1px solid #e2e2e2;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
     outline: none;
     font-size: 14px;
+    background: var(--color-bg);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .profile-address-form input:focus {
-    border-color: rgba(255, 99, 71, 0.65);
-    box-shadow: 0 0 0 4px rgba(255, 99, 71, 0.12);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-muted);
+    background: var(--color-surface);
 }
 
 .multi-fields {
@@ -370,12 +415,16 @@
 
 @media (max-width: 768px) {
     .profile {
-        margin-top: 50px;
-        padding: 0 10px;
+        margin-top: 24px;
     }
 
     .profile-container {
-        gap: 20px;
+        gap: 18px;
+    }
+
+    .profile-card-header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .profile-row {
@@ -398,12 +447,5 @@
 
     .address-actions {
         justify-content: flex-start;
-    }
-
-    .address-remove-btn {
-        top: 10px;
-        right: 10px;
-        width: 28px;
-        height: 28px;
     }
 }

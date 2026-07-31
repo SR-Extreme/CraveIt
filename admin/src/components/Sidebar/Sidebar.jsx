@@ -5,12 +5,10 @@ import { NavLink } from "react-router-dom";
 import { FaList, FaUsers, FaTags } from "react-icons/fa";
 import { MdOutlineRestaurantMenu, MdAddCircleOutline } from "react-icons/md";
 import { hasPermission, PERMISSIONS } from "../../utils/permissions";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = () => {
-  const role =
-    sessionStorage.getItem("admin_role") ||
-    localStorage.getItem("admin_role") ||
-    "";
+  const { role } = useAuth();
 
   const canManageFoods = hasPermission(role, PERMISSIONS.FOODS_MANAGE);
   const canManageCategories = hasPermission(role, PERMISSIONS.CATEGORIES_MANAGE);

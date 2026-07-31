@@ -1,36 +1,37 @@
-import React, { useContext, useMemo } from "react";
+import React from "react";
 import "./InfiniteCarousel.css";
-import { StoreContext } from "../../context/StoreContext";
+
+const CAROUSEL_IMAGES = [
+  "/carousal/Download_1.jpg",
+  "/carousal/Download_2.jpg",
+  "/carousal/Download_3.jpg",
+  "/carousal/Download_4.avif",
+  "/carousal/Download_5.jpg",
+  "/carousal/Download_6.jpeg",
+  "/carousal/Download_7.png",
+  "/carousal/Download_8.jpg",
+  "/carousal/Download_9.jpg",
+  "/carousal/Download_10.jpg",
+];
 
 const InfiniteCarousel = () => {
-    const { url, food_list } = useContext(StoreContext);
+  const loopImages = [...CAROUSEL_IMAGES, ...CAROUSEL_IMAGES];
 
-    const images = useMemo(
-        () => food_list.filter((item) => item.image),
-        [food_list]
-    );
-
-    if (images.length === 0) {
-        return null;
-    }
-
-    const loopImages = [...images, ...images];
-
-    return (
-        <section className="infinite-carousel" aria-label="Food highlights carousel">
-            <div className="infinite-carousel-track">
-                {loopImages.map((item, index) => (
-                    <div className="infinite-carousel-item" key={`${item._id}-${index}`}>
-                        <img
-                            src={`${url}/images/${item.image}`}
-                            alt={item.name}
-                            loading="lazy"
-                        />
-                    </div>
-                ))}
-            </div>
-        </section>
-    );
+  return (
+    <section
+      className="infinite-carousel"
+      id="highlights"
+      aria-label="Food highlights carousel"
+    >
+      <div className="infinite-carousel-track">
+        {loopImages.map((src, index) => (
+          <div className="infinite-carousel-item" key={`${src}-${index}`}>
+            <img src={src} alt={`CraveIt highlight ${(index % CAROUSEL_IMAGES.length) + 1}`} loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 };
 
 export default InfiniteCarousel;

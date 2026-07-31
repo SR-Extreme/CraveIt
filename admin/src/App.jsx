@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
+import Footer from "./components/Footer/Footer";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Add from "./pages/Add/Add";
 import List from "./pages/List/List";
@@ -14,17 +15,10 @@ import Users from "./pages/Users/Users";
 import UserDetails from "./pages/UserDetails/UserDetails";
 import Categories from "./pages/Categories/Categories";
 import { hasPermission, PERMISSIONS } from "./utils/permissions";
+import { useAuth } from "./context/AuthContext";
 
 const App = () => {
-  const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
-  const token =
-    sessionStorage.getItem("admin_token") ||
-    localStorage.getItem("admin_token");
-  const role =
-    sessionStorage.getItem("admin_role") ||
-    localStorage.getItem("admin_role") ||
-    "";
-
+  const { role, loading, isAuthenticated, url } = useAuth();
   const defaultPath = role === "admin" ? "/orders" : "/add";
 
   const RequirePermission = ({ permission, children }) => {
@@ -34,8 +28,17 @@ const App = () => {
     return children;
   };
 
+  if (loading) {
+    return (
+      <div className="admin-app">
+        <ToastContainer />
+        <p style={{ textAlign: "center", marginTop: "2rem" }}>Loading...</p>
+      </div>
+    );
+  }
+
   return (
-    <div>
+    <div className="admin-app">
       <ToastContainer />
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
@@ -43,72 +46,75 @@ const App = () => {
         <Route
           path="/*"
           element={
-            token ? (
+            isAuthenticated ? (
               <>
                 <Navbar />
                 <div className="app-content">
                   <Sidebar />
-                  <Routes>
-                    <Route
-                      path="/add"
-                      element={
-                        <RequirePermission permission={PERMISSIONS.FOODS_MANAGE}>
-                          <Add url={url} />
-                        </RequirePermission>
-                      }
-                    />
-                    <Route
-                      path="/list"
-                      element={
-                        <RequirePermission permission={PERMISSIONS.FOODS_MANAGE}>
-                          <List url={url} />
-                        </RequirePermission>
-                      }
-                    />
-                    <Route
-                      path="/categories"
-                      element={
-                        <RequirePermission permission={PERMISSIONS.CATEGORIES_MANAGE}>
-                          <Categories url={url} />
-                        </RequirePermission>
-                      }
-                    />
-                    <Route
-                      path="/orders"
-                      element={
-                        <RequirePermission permission={PERMISSIONS.ORDERS_VIEW}>
-                          <Orders url={url} />
-                        </RequirePermission>
-                      }
-                    />
-                    <Route
-                      path="/assign-orders"
-                      element={
-                        <RequirePermission permission={PERMISSIONS.ORDERS_ASSIGN}>
-                          <Assignment url={url} />
-                        </RequirePermission>
-                      }
-                    />
-                    <Route
-                      path="/users"
-                      element={
-                        <RequirePermission permission={PERMISSIONS.USERS_MANAGE}>
-                          <Users />
-                        </RequirePermission>
-                      }
-                    />
-                    <Route
-                      path="/users/:id"
-                      element={
-                        <RequirePermission permission={PERMISSIONS.USERS_MANAGE}>
-                          <UserDetails />
-                        </RequirePermission>
-                      }
-                    />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="*" element={<Navigate to={defaultPath} replace />} />
-                  </Routes>
+                  <main className="app-main">
+                    <Routes>
+                      <Route
+                        path="/add"
+                        element={
+                          <RequirePermission permission={PERMISSIONS.FOODS_MANAGE}>
+                            <Add url={url} />
+                          </RequirePermission>
+                        }
+                      />
+                      <Route
+                        path="/list"
+                        element={
+                          <RequirePermission permission={PERMISSIONS.FOODS_MANAGE}>
+                            <List url={url} />
+                          </RequirePermission>
+                        }
+                      />
+                      <Route
+                        path="/categories"
+                        element={
+                          <RequirePermission permission={PERMISSIONS.CATEGORIES_MANAGE}>
+                            <Categories url={url} />
+                          </RequirePermission>
+                        }
+                      />
+                      <Route
+                        path="/orders"
+                        element={
+                          <RequirePermission permission={PERMISSIONS.ORDERS_VIEW}>
+                            <Orders url={url} />
+                          </RequirePermission>
+                        }
+                      />
+                      <Route
+                        path="/assign-orders"
+                        element={
+                          <RequirePermission permission={PERMISSIONS.ORDERS_ASSIGN}>
+                            <Assignment url={url} />
+                          </RequirePermission>
+                        }
+                      />
+                      <Route
+                        path="/users"
+                        element={
+                          <RequirePermission permission={PERMISSIONS.USERS_MANAGE}>
+                            <Users />
+                          </RequirePermission>
+                        }
+                      />
+                      <Route
+                        path="/users/:id"
+                        element={
+                          <RequirePermission permission={PERMISSIONS.USERS_MANAGE}>
+                            <UserDetails />
+                          </RequirePermission>
+                        }
+                      />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="*" element={<Navigate to={defaultPath} replace />} />
+                    </Routes>
+                  </main>
                 </div>
+                <Footer />
               </>
             ) : (
               <Navigate to="/auth?mode=login" replace />

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { assets } from "../../assets/assets";
+import { getImageUrl } from "../../utils/imageUrl";
+import { hasErrors, validators } from "../../utils/validation";
 import "./Categories.css";
 
 const Categories = ({ url }) => {
@@ -9,10 +11,8 @@ const Categories = ({ url }) => {
     const [name, setName] = useState("");
     const [image, setImage] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [errors, setErrors] = useState({});
 
-    const token =
-        sessionStorage.getItem("admin_token") ||
-        localStorage.getItem("admin_token");
 
     const fetchCategories = async () => {
         setLoading(true);
@@ -30,32 +30,45 @@ const Categories = ({ url }) => {
         }
     };
 
+    const handleNameChange = (e) => {
+        const value = e.target.value;
+        setName(value);
+        if (errors.name) {
+            setErrors((prev) => ({ ...prev, name: validators.text(value, "Category name") }));
+        }
+    };
+
+    const handleNameBlur = () => {
+        setErrors((prev) => ({ ...prev, name: validators.text(name, "Category name") }));
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setImage(file || false);
+        setErrors((prev) => ({ ...prev, image: validators.image(file) }));
+    };
+
     const handleAdd = async (e) => {
         e.preventDefault();
 
-        if (!name.trim()) {
-            toast.error("Category name is required");
-            return;
-        }
-
-        if (!image) {
-            toast.error("Category image is required");
-            return;
-        }
+        const nextErrors = {
+            name: validators.text(name, "Category name"),
+            image: validators.image(image)};
+        setErrors(nextErrors);
+        if (hasErrors(nextErrors)) return;
 
         const formData = new FormData();
         formData.append("name", name.trim());
         formData.append("image", image);
 
         try {
-            const response = await axios.post(`${url}/api/category/add`, formData, {
-                headers: { token },
-            });
+            const response = await axios.post(`${url}/api/category/add`, formData);
 
             if (response.data.success) {
                 toast.success("Category added");
                 setName("");
                 setImage(false);
+                setErrors({});
                 fetchCategories();
             } else {
                 toast.error(response.data.message || "Failed to add category");
@@ -72,8 +85,7 @@ const Categories = ({ url }) => {
         try {
             const response = await axios.post(
                 `${url}/api/category/remove`,
-                { id },
-                { headers: { token } }
+                { id }
             );
 
             if (response.data.success) {
@@ -98,7 +110,7 @@ const Categories = ({ url }) => {
                 <p>Create and manage food categories</p>
             </div>
 
-            <form className="categories-form" onSubmit={handleAdd}>
+            <form className="categories-form" onSubmit={handleAdd} noValidate>
                 <div className="categories-upload">
                     <p>Category Image</p>
                     <label htmlFor="category-image">
@@ -112,18 +124,24 @@ const Categories = ({ url }) => {
                         type="file"
                         accept="image/*"
                         hidden
-                        onChange={(e) => setImage(e.target.files[0])}
+                        onChange={handleImageChange}
+                        onBlur={() => setErrors((prev) => ({ ...prev, image: validators.image(image) }))}
                     />
+                    {errors.image ? <p className="field-error">{errors.image}</p> : null}
                 </div>
 
                 <div className="categories-fields">
-                    <input
-                        type="text"
-                        placeholder="Category name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
+                    <div className="form-field">
+                        <input
+                            type="text"
+                            placeholder="Category name"
+                            value={name}
+                            onChange={handleNameChange}
+                            onBlur={handleNameBlur}
+                            className={errors.name ? "field-invalid" : ""}
+                        />
+                        {errors.name ? <p className="field-error">{errors.name}</p> : null}
+                    </div>
                     <button type="submit">Add Category</button>
                 </div>
             </form>
@@ -133,10 +151,10 @@ const Categories = ({ url }) => {
             ) : categories.length === 0 ? (
                 <p className="categories-status">No categories yet. Add your first one.</p>
             ) : (
-                <div className="categories-grid">
+                <div className="categories-list">
                     {categories.map((cat) => (
                         <article className="categories-card" key={cat._id}>
-                            <img src={`${url}/images/${cat.image}`} alt={cat.name} />
+                            <img src={getImageUrl(cat.image)} alt={cat.name} />
                             <div className="categories-card-body">
                                 <h4>{cat.name}</h4>
                                 <button type="button" onClick={() => handleRemove(cat._id)}>

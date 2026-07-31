@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./FoodItem.css";
 import { StoreContext } from "../../context/StoreContext";
 import QuantitySelector from "../QuantitySelector/QuantitySelector";
+import { getImageUrl } from "../../utils/imageUrl";
 
 const FoodItem = ({
     id,
@@ -12,7 +13,7 @@ const FoodItem = ({
     image,
     averageRating = 0,
 }) => {
-    const { cartItems, addToCart, removeFromCart, url } =
+    const { cartItems, addToCart, removeFromCart } =
         useContext(StoreContext);
     const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ const FoodItem = ({
             <div className="food-item-img-container">
                 <img
                     className="food-item-image"
-                    src={url + "/images/" + image}
+                    src={getImageUrl(image)}
                     alt={name}
                 />
                 <div className="food-item-qty">

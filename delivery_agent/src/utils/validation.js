@@ -1,0 +1,50 @@
+const trim = (value) => String(value ?? "").trim();
+
+export const validators = {
+  name: (value, label = "Name") => {
+    const v = trim(value);
+    if (!v) return `${label} is required`;
+    if (v.length < 2) return `${label} must be at least 2 characters`;
+    if (!/^[a-zA-Z\s.'-]+$/.test(v)) return `${label} can only contain letters`;
+    return "";
+  },
+
+  email: (value) => {
+    const v = trim(value);
+    if (!v) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "Please enter a valid email";
+    return "";
+  },
+
+  phone: (value) => {
+    const v = trim(value);
+    if (!v) return "Phone number is required";
+    if (!/^\d{10}$/.test(v)) return "Phone number must be exactly 10 digits";
+    return "";
+  },
+
+  password: (value, label = "Password") => {
+    const v = String(value ?? "");
+    if (!v) return `${label} is required`;
+    if (v.length < 8) return `${label} must be at least 8 characters`;
+    return "";
+  },
+
+  otp: (value) => {
+    const v = trim(value);
+    if (!v) return "OTP is required";
+    if (!/^\d{6}$/.test(v)) return "OTP must be exactly 6 digits";
+    return "";
+  },
+};
+
+export const validateFields = (data, schema) => {
+  const errors = {};
+  Object.keys(schema).forEach((key) => {
+    const message = schema[key](data[key], data);
+    if (message) errors[key] = message;
+  });
+  return errors;
+};
+
+export const hasErrors = (errors) => Object.values(errors).some(Boolean);

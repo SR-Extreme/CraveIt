@@ -1,197 +1,220 @@
-:root {
-  --brand-color: tomato;
-  --brand-dark: #e65a3c;
-  --brand-light: #fff4f1;
-
-  --bg-page: #fafafa;
-  --bg-card: #ffffff;
-
-  --text-main: #2c2c2c;
-  --text-sub: #7a7a7a;
-
-  --border: #eeeeee;
-  --border-soft: #f5f5f5;
-
-  --radius-md: 10px;
-  --radius-lg: 16px;
-
-  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-body {
-  font-family: "Poppins", sans-serif;
-  font-size: 14px;
-  color: var(--text-main);
-}
-
-.container {
+.assignment-page {
   width: 100%;
-  min-height: 100vh;
-  padding: 30px 40px;
-  box-sizing: border-box;
-  background: var(--bg-page);
-
+  padding: 28px 5% 48px;
   display: flex;
   flex-direction: column;
+  gap: 28px;
 }
 
-.heading {
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--brand-color);
-  margin-bottom: 40px;
+.assignment-header h2 {
+  font-size: clamp(1.45rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.assignment-header p {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 .assignment-box {
   width: 100%;
-  max-width: 1000px;
-  margin: 0 auto 50px auto;
-
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-}
-
-.assignment-box input {
-  flex: 1;
-  max-width: 300px;
-  height: 54px;
-  border: 1.5px solid var(--border);
-  border-radius: 999px;
-  padding: 0 18px;
-  font-size: 0.95rem;
-  text-align: center;
+  flex-wrap: wrap;
+  gap: 14px;
   background: var(--bg-card);
-  color: var(--text-main);
-  outline: none;
-  transition: 0.2s ease;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 22px 24px;
 }
 
-.assignment-box input::placeholder {
-  color: #999;
+.assignment-selected {
+  flex: 1;
+  min-width: 180px;
+  max-width: 300px;
+  min-height: 56px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  background: var(--bg-main);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
 }
 
-.assignment-box input:focus {
-  border-color: var(--brand-color);
+.assignment-selected-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+}
+
+.assignment-selected-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .assign-text {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  color: var(--text-sub);
+  color: var(--text-secondary);
 }
 
 .assign-btn {
-  height: 54px;
+  height: 48px;
   min-width: 120px;
-  border-radius: 14px;
+  border-radius: 999px;
   border: none;
   background: var(--brand-color);
   color: white;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .assign-btn:hover {
-  background: var(--brand-dark);
+  background: var(--brand-color-dark);
+  transform: translateY(-1px);
 }
 
-.lists-container {
-  display: flex;
-  gap: 24px;
+.assignment-lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-.list {
-  flex: 1;
+.assignment-list {
   background: var(--bg-card);
-  border: 1.5px solid var(--border);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   padding: 18px;
-  min-height: 480px;
+  min-height: 420px;
   display: flex;
   flex-direction: column;
 }
 
-.list h3 {
+.assignment-list h3 {
   text-align: center;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--brand-color);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
   margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-soft);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.scroll {
+.assignment-scroll {
   flex: 1;
   overflow-y: auto;
   padding-right: 4px;
 }
 
-.scroll::-webkit-scrollbar {
+.assignment-scroll::-webkit-scrollbar {
   width: 6px;
 }
 
-.scroll::-webkit-scrollbar-thumb {
+.assignment-scroll::-webkit-scrollbar-thumb {
   background: #ddd;
   border-radius: 10px;
 }
 
-.card {
-  padding: 12px 14px;
+.assignment-card {
+  padding: 14px 16px;
   margin-bottom: 10px;
-  border: 1px solid var(--border-soft);
-  border-radius: 12px;
-  background: #ffffff;
-  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text-primary);
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.card:hover {
-  background: var(--brand-light);
+.assignment-card:hover {
+  background: var(--brand-color-soft);
   border-color: var(--brand-color);
 }
 
-.selected {
-  background: var(--brand-light);
+.assignment-card.selected {
+  background: var(--brand-color-soft);
   border: 1.5px solid var(--brand-color);
-  font-weight: 600;
 }
 
-.empty-message {
+.assignment-card-id {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  word-break: break-all;
+  font-weight: 500;
+}
+
+.assignment-card-id span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+}
+
+.assignment-card-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.assignment-card.selected .assignment-card-name {
+  color: var(--brand-color-dark);
+}
+
+.assignment-card-meta {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.assignment-empty {
   text-align: center;
-  color: #999;
+  color: var(--text-secondary);
   font-size: 0.95rem;
-  margin-top: 120px;
+  margin-top: 100px;
   padding: 18px;
-  border-radius: 12px;
-  background: #fafafa;
+  border-radius: var(--radius-sm);
+  background: var(--bg-main);
 }
 
 @media (max-width: 1000px) {
-  .lists-container {
-    flex-direction: column;
+  .assignment-lists {
+    grid-template-columns: 1fr;
   }
 
   .assignment-box {
     flex-direction: column;
-    gap: 14px;
   }
 
-  .assignment-box input {
+  .assignment-selected {
     width: 100%;
     max-width: 100%;
   }
 
   .assign-btn {
     width: 100%;
-  }
-
-  .heading {
-    text-align: center;
   }
 }

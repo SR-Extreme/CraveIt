@@ -1,8 +1,48 @@
 .home {
-    width: 100%;
-    animation: fadeIn 0.4s ease;
+  width: 100%;
+  animation: fadeIn 0.4s ease;
+  background: var(--color-bg);
 }
 
-.home>*+* {
-    scroll-margin-top: 90px;
+.home-main {
+  width: min(var(--page-max), calc(100% - (var(--page-pad) * 2)));
+  margin: 0 auto;
+  padding: 4px 0 28px;
+}
+
+.home-main--end {
+  padding-bottom: 0;
+  width: 100%;
+  max-width: none;
+  background: #fff;
+}
+
+.home-main--end .home-block {
+  width: min(var(--page-max), calc(100% - (var(--page-pad) * 2)));
+  margin: 0 auto;
+  padding-bottom: 0;
+}
+
+.home-block {
+  padding: 36px 0 20px;
+  scroll-margin-top: 64px;
+}
+
+.home-block .food-display,
+.home-block .in-demand,
+.home-block .gallery,
+.home-block .explore-menu {
+  margin-top: 0;
+}
+
+.home-divider {
+  border: none;
+  height: 1px;
+  width: min(var(--page-max), calc(100% - (var(--page-pad) * 2)));
+  margin: 4px auto;
+  background: #dcdce0;
+}
+
+.home-main--end .home-divider {
+  width: min(var(--page-max), calc(100% - (var(--page-pad) * 2)));
 }

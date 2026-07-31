@@ -104,11 +104,18 @@ const Search = () => {
 
     return (
         <div className="search-page">
-            <h2 className="search-title">
-                {searchedQuery
-                    ? `Search Results for "${searchedQuery}"`
-                    : "Search Results"}
-            </h2>
+            <div className="search-header">
+                <h1 className="search-title">
+                    {searchedQuery
+                        ? `Results for "${searchedQuery}"`
+                        : "Search"}
+                </h1>
+                <p>
+                    {searchedQuery
+                        ? "Refine with filters to find the perfect dish"
+                        : "Type a dish name in the navbar to get started"}
+                </p>
+            </div>
 
             <div className="search-filters">
                 <FoodFilters

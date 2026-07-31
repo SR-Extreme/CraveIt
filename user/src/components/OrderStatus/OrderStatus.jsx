@@ -10,7 +10,7 @@ const steps = [
     { key: "Assigned", label: "Assigned" },
     { key: "Picked", label: "Picked Up" },
     { key: "Out for Delivery", label: "Out for Delivery" },
-    { key: "Delivered", label: "Delivered" },
+    { key: "Delivered", label: "Order Delivered" },
 ];
 
 const OrderStatus = () => {
@@ -18,15 +18,17 @@ const OrderStatus = () => {
     const { url } = useContext(StoreContext);
     const { status, setStatus } = useContext(TrackingContext);
 
-    const currentStepIndex = Math.max(
-        0,
-        steps.findIndex((step) => step.key === status)
-    );
+    const matchedStepIndex = steps.findIndex((step) => step.key === status);
+    const currentStepIndex = matchedStepIndex >= 0 ? matchedStepIndex : 0;
+    const currentStatusLabel =
+        status === "Delivered"
+            ? "Order Delivered"
+            : steps[matchedStepIndex]?.label || status || "Unknown";
 
     const updateTrackOrder = async () => {
         try {
             const response = await axios.post(`${url}/api/order/trackorder`, { orderId });
-            if (response.data.success) {
+            if (response.data.success && response.data.data?.status) {
                 setStatus(response.data.data.status);
             }
         } catch (error) {
@@ -55,7 +57,7 @@ const OrderStatus = () => {
             </div>
 
             <p className="current-status-text">
-                Current Status: <span>{steps[currentStepIndex]?.label || "Unknown"}</span>
+                Current Status: <span>{currentStatusLabel}</span>
             </p>
             <button type="button" onClick={updateTrackOrder}>
                 Refresh Status

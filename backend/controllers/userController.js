@@ -4,6 +4,7 @@ import bcrypt from "bcrypt"
 import validator from "validator"
 import generateOTP from "../utils/generateOtp.js";
 import sendOTP from "../utils/sendOTP.js";
+import { clearAuthCookie, setAuthCookie } from "../utils/authCookie.js";
 
 //login user
 const loginUser = async (req, res) => {
@@ -21,9 +22,9 @@ const loginUser = async (req, res) => {
 
         if (user.role === "admin" || user.role === "superadmin") {
             const token = createToken(user._id);
+            setAuthCookie(res, token);
             return res.json({
                 success: true,
-                token,
                 role: user.role,
                 requiresOtp: false,
             });
@@ -44,7 +45,7 @@ const loginUser = async (req, res) => {
 };
 
 const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET);
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 }
 
 //register user
@@ -92,9 +93,8 @@ const registerUser = async (req, res) => {
             password: hashedPassword,
         })
 
-        const user = await newUser.save();
-        const token = createToken(user._id);
-        res.json({ success: true, token });
+        await newUser.save();
+        res.json({ success: true, message: "User registered successfully" });
 
     } catch (error) {
         console.log(error);
@@ -281,13 +281,19 @@ const verifyOTP = async (req, res) => {
         await user.save();
 
         const token = createToken(user._id);
+        setAuthCookie(res, token);
 
-        res.json({ success: true, token, role: user.role });
+        res.json({ success: true, role: user.role });
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error" });
     }
 }
 
+const logoutUser = async (req, res) => {
+    clearAuthCookie(res);
+    res.json({ success: true, message: "Logged out successfully" });
+};
 
-export { loginUser, registerUser, getUser, updatePassword, updateAddress, deleteAddress, getAllUsers, getUserById, deleteUser, getTopCustomers, verifyOTP };
+
+export { loginUser, registerUser, getUser, updatePassword, updateAddress, deleteAddress, getAllUsers, getUserById, deleteUser, getTopCustomers, verifyOTP, logoutUser };

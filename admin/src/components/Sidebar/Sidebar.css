@@ -1,64 +1,69 @@
 .sidebar {
-    width: min(260px, 22vw);
-    min-height: 100vh;
-    border-right: 1px solid var(--border-color);
-    border-top: 0;
-    font-size: 14px;
-    background: var(--bg-card);
+  width: min(240px, 22vw);
+  min-height: 100%;
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-card);
+  flex-shrink: 0;
 }
 
 .sidebar-options {
-    padding: 26px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: sticky;
+  top: 56px;
 }
 
 .sidebar-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid transparent;
-    padding: 11px 12px;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    color: #4e4e4e;
-    transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.sidebar-option img {
-    width: 14px;
-    height: 14px;
+.sidebar-option img,
+.sidebar-option svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .sidebar-option:hover {
-    background: #fafafa;
-    border-color: #efefef;
-    color: var(--text-primary);
-}
-
-@media (max-width:900px) {
-    .sidebar {
-        width: 72px;
-    }
-
-    .sidebar-options {
-        padding: 18px 10px;
-    }
-
-    .sidebar-option {
-        justify-content: center;
-        padding: 10px;
-    }
-
-    .sidebar-option p {
-        display: none;
-    }
+  background: var(--bg-main);
+  border-color: var(--border-color);
+  color: var(--text-primary);
 }
 
 .sidebar-option.active {
-    background-color: var(--brand-color-soft);
-    border-color: rgba(255, 99, 71, 0.35);
-    color: var(--brand-color-dark);
-    font-weight: 600;
+  background-color: var(--brand-color-soft);
+  border-color: var(--brand-color-muted);
+  color: var(--brand-color-dark);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 72px;
+  }
+
+  .sidebar-options {
+    padding: 16px 10px;
+  }
+
+  .sidebar-option {
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .sidebar-option p {
+    display: none;
+  }
 }

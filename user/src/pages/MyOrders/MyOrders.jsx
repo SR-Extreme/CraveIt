@@ -9,7 +9,6 @@ import RatingStars from "../RatingStars/RatingStars";
 import {
   joinOrderRoom,
   listenDeliveryOtp,
-  removeSocketListeners,
 } from "../../services/socketService";
 
 const MyOrders = () => {
@@ -21,11 +20,7 @@ const MyOrders = () => {
   const navigate = useNavigate();
 
   const fetchOrders = async () => {
-    const response = await axios.post(
-      url + "/api/order/userorders",
-      {},
-      { headers: { token } }
-    );
+    const response = await axios.post(url + "/api/order/userorders", {});
 
     if (response.data.success) {
       const orders = response.data.data || [];
@@ -68,11 +63,10 @@ const MyOrders = () => {
 
     setSubmittingRating(orderId);
     try {
-      const response = await axios.post(
-        url + "/api/order/rate",
-        { orderId, rating },
-        { headers: { token } }
-      );
+      const response = await axios.post(url + "/api/order/rate", {
+        orderId,
+        rating,
+      });
 
       if (response.data.success) {
         toast.success("Thanks for your rating!");
@@ -108,7 +102,7 @@ const MyOrders = () => {
   }, [token]);
 
   useEffect(() => {
-    listenDeliveryOtp((payload) => {
+    const unsubscribe = listenDeliveryOtp((payload) => {
       const orderId = payload?.orderId;
       if (!orderId) return;
 
@@ -133,7 +127,7 @@ const MyOrders = () => {
     });
 
     return () => {
-      removeSocketListeners();
+      unsubscribe();
     };
   }, []);
 
@@ -154,7 +148,10 @@ const MyOrders = () => {
         </div>
       ) : (
         <div className="my-orders">
-          <h2>My Orders</h2>
+          <div className="my-orders-header">
+            <h2>My Orders</h2>
+            <p>Track deliveries, view OTPs, and rate your meals</p>
+          </div>
           <div className="container">
             {data.map((order) => {
               const liveOtp = otpByOrder[order._id] || order.deliveryOtp;

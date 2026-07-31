@@ -1,63 +1,76 @@
 .admin-profile {
-    width: 100%;
-    max-width: 640px;
-    margin: 28px auto;
-    padding: 0 20px 40px;
+  width: 100%;
+  max-width: none;
+  padding: 28px 5% 48px;
 }
 
-.admin-profile h2 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 6px;
+.admin-profile-header {
+  margin-bottom: 22px;
+}
+
+.admin-profile-header h2 {
+  font-size: clamp(1.45rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .admin-profile-subtitle {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    margin-bottom: 22px;
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 .admin-profile-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-soft);
-    overflow: hidden;
+  max-width: 640px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
 }
 
 .admin-profile-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .admin-profile-row:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .admin-profile-row span {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .admin-profile-row strong {
-    font-size: 1rem;
-    color: var(--text-primary);
-    text-align: right;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-align: right;
 }
 
 .admin-profile-role {
-    text-transform: capitalize;
-    color: var(--brand-color-dark) !important;
-    background: var(--brand-color-soft);
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 0.9rem !important;
+  text-transform: capitalize;
+  color: var(--brand-color-dark) !important;
+  background: var(--brand-color-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.9rem !important;
+}
+
+.admin-profile-status {
+  color: var(--text-secondary);
+  padding: 28px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  max-width: 640px;
 }

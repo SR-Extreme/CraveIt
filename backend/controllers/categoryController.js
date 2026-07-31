@@ -1,6 +1,6 @@
 import categoryModel from "../models/categoryModel.js";
 import foodModel from "../models/foodModel.js";
-import fs from "fs";
+import { uploadImageBuffer, deleteImageByUrl } from "../utils/cloudinaryUpload.js";
 
 const listCategories = async (req, res) => {
     try {
@@ -29,16 +29,18 @@ const addCategory = async (req, res) => {
             return res.json({ success: false, message: "Category already exists" });
         }
 
+        const uploaded = await uploadImageBuffer(req.file, "craveit/categories");
+
         const category = new categoryModel({
             name,
-            image: req.file.filename,
+            image: uploaded.url,
         });
 
         await category.save();
         res.json({ success: true, message: "Category added", data: category });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" });
+        res.json({ success: false, message: error.message || "Error" });
     }
 };
 
@@ -65,8 +67,9 @@ const updateCategory = async (req, res) => {
         }
 
         if (req.file) {
-            fs.unlink(`uploads/${category.image}`, () => { });
-            category.image = req.file.filename;
+            await deleteImageByUrl(category.image);
+            const uploaded = await uploadImageBuffer(req.file, "craveit/categories");
+            category.image = uploaded.url;
         }
 
         category.name = newName;
@@ -82,7 +85,7 @@ const updateCategory = async (req, res) => {
         res.json({ success: true, message: "Category updated", data: category });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" });
+        res.json({ success: false, message: error.message || "Error" });
     }
 };
 
@@ -106,13 +109,13 @@ const removeCategory = async (req, res) => {
             });
         }
 
-        fs.unlink(`uploads/${category.image}`, () => { });
+        await deleteImageByUrl(category.image);
         await categoryModel.findByIdAndDelete(id);
 
         res.json({ success: true, message: "Category removed" });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" });
+        res.json({ success: false, message: error.message || "Error" });
     }
 };
 

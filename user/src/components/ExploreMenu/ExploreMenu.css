@@ -56,10 +56,7 @@
 }
 
 .explore-menu hr {
-    margin: 10px 0;
-    height: 2px;
-    background-color: var(--color-border);
-    border: none;
+  display: none;
 }
 
 .explore-menu-list-item .active {

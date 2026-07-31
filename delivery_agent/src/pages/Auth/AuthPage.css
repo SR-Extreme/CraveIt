@@ -6,7 +6,7 @@
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
-  background-color: #f3f5f9;
+  background-color: var(--color-bg);
 }
 
 .role-auth-page::before {
@@ -15,73 +15,85 @@
   inset: 0;
   background: url('/Login_bg.jpg') no-repeat center center;
   background-size: cover;
-  filter: blur(6px);
+  filter: blur(6px) brightness(0.72);
   transform: scale(1.08);
+  z-index: 0;
+}
+
+.role-auth-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(17, 17, 17, 0.45) 0%,
+    rgba(255, 106, 0, 0.18) 100%
+  );
   z-index: 0;
 }
 
 .role-auth-card {
   position: relative;
   z-index: 1;
-
   width: min(92vw, 420px);
-  padding: 28px 24px;
+  padding: 32px 28px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-
-  border-radius: 20px;
-
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
-  border: 1px solid rgba(73, 85, 126, 0.08);
-  box-shadow: 0 12px 40px rgba(73, 85, 126, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  animation: fadeIn 0.4s ease;
 }
 
 .role-auth-card h2 {
-  color: #49557e;
-  font-size: 1.35rem;
-  font-weight: 600;
-  margin-bottom: 4px;
+  color: var(--color-text);
+  font-size: clamp(1.35rem, 2vw, 1.55rem);
+  font-weight: 700;
+  margin-bottom: 6px;
   text-align: center;
 }
 
 .role-auth-card input {
   padding: 12px 14px;
-  border: 1px solid #e0e3eb;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   font-size: 15px;
-  color: #49557e;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .role-auth-card input::placeholder {
-  color: #a0a5b8;
+  color: var(--color-text-light);
 }
 
 .role-auth-card input:focus {
   outline: none;
-  border-color: rgba(255, 99, 71, 0.55);
-  box-shadow: 0 0 0 3px rgba(255, 99, 71, 0.12);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-muted);
+  background: var(--color-surface);
 }
 
 .role-auth-card button[type="submit"] {
   border: none;
-  background: #ff6347;
+  background: var(--color-primary);
   color: #fff;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 13px;
+  border-radius: 999px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  margin-top: 4px;
-  transition: background 0.2s, transform 0.15s;
+  margin-top: 6px;
+  transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .role-auth-card button[type="submit"]:hover {
-  background: #e85a40;
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
 }
 
 .role-auth-card button[type="submit"]:active {
@@ -90,17 +102,24 @@
 
 .role-auth-card p {
   text-align: center;
-  color: #6b7288;
+  color: var(--color-text-muted);
   font-size: 14px;
   margin-top: 4px;
+  line-height: 1.5;
+}
+
+.role-auth-card p strong {
+  color: var(--color-text);
+  font-weight: 600;
 }
 
 .role-auth-card p span {
-  color: #ff6347;
+  color: var(--color-primary);
   font-weight: 600;
   cursor: pointer;
 }
 
 .role-auth-card p span:hover {
   text-decoration: underline;
+  color: var(--color-primary-dark);
 }

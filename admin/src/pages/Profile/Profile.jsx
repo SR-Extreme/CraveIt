@@ -6,23 +6,12 @@ const Profile = () => {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
-    const token =
-        sessionStorage.getItem("admin_token") ||
-        localStorage.getItem("admin_token");
+
 
     useEffect(() => {
         const fetchProfile = async () => {
-            if (!token) {
-                setLoading(false);
-                return;
-            }
-
             try {
-                const response = await axios.post(
-                    `${url}/api/user/getuser`,
-                    {},
-                    { headers: { token } }
-                );
+                const response = await axios.post(`${url}/api/user/getuser`, {});
 
                 if (response.data.success) {
                     setProfile(response.data.data);
@@ -35,12 +24,12 @@ const Profile = () => {
         };
 
         fetchProfile();
-    }, [token, url]);
+    }, [url]);
 
     if (loading) {
         return (
             <div className="admin-profile">
-                <p>Loading profile...</p>
+                <p className="admin-profile-status">Loading profile...</p>
             </div>
         );
     }
@@ -48,15 +37,17 @@ const Profile = () => {
     if (!profile) {
         return (
             <div className="admin-profile">
-                <p>Unable to load profile.</p>
+                <p className="admin-profile-status">Unable to load profile.</p>
             </div>
         );
     }
 
     return (
         <div className="admin-profile">
-            <h2>Admin Profile</h2>
-            <p className="admin-profile-subtitle">Your account details</p>
+            <div className="admin-profile-header">
+                <h2>Admin Profile</h2>
+                <p className="admin-profile-subtitle">Your account details</p>
+            </div>
 
             <div className="admin-profile-card">
                 <div className="admin-profile-row">

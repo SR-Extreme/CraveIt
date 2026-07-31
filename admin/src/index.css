@@ -11,14 +11,31 @@
   --brand-color: #ff6a00;
   --brand-color-dark: #e85d00;
   --brand-color-soft: #fff3eb;
+  --brand-color-muted: #ffe0cc;
+
+  --color-accent: #111111;
+  --color-accent-soft: #2a2a2a;
+
   --bg-main: #f7f7f8;
   --bg-card: #ffffff;
   --text-primary: #1a1a1a;
   --text-secondary: #6b6b6b;
-  --border-color: #ececec;
+  --text-light: #9a9a9a;
+  --border-color: #e5e5e7;
+
+  --shadow-sm: 0 2px 8px rgba(17, 17, 17, 0.06);
+  --shadow-md: 0 8px 24px rgba(17, 17, 17, 0.08);
   --shadow-soft: 0 8px 24px rgba(17, 17, 17, 0.08);
-  --radius-md: 10px;
-  --radius-lg: 14px;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+
+  --page-pad: clamp(16px, 5vw, 64px);
+  --page-max: 1280px;
+
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.3s ease;
 }
 
 body {
@@ -32,24 +49,89 @@ a {
   color: inherit;
 }
 
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
 hr {
   border: none;
   height: 1px;
   background-color: var(--border-color);
 }
 
+.admin-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .app-content {
   display: flex;
   align-items: stretch;
+  flex: 1;
+  min-height: 0;
 }
 
-.app-content> :not(.sidebar) {
+.app-main {
   flex: 1;
   min-width: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  background: var(--bg-main);
+}
+
+.page-shell {
+  width: 100%;
+  padding: 28px 5% 48px;
+}
+
+.page-heading {
+  margin-bottom: 22px;
+}
+
+.page-heading h2,
+.page-heading h1 {
+  font-size: clamp(1.45rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.page-heading p {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 .cursor {
   cursor: pointer;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.field-error {
+  color: #d32f2f;
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.field-invalid,
+input.field-invalid,
+textarea.field-invalid,
+select.field-invalid {
+  border-color: #d32f2f !important;
+}
+
+.field-invalid:focus,
+input.field-invalid:focus,
+textarea.field-invalid:focus,
+select.field-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15) !important;
 }

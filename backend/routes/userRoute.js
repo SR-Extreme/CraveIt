@@ -1,5 +1,5 @@
 import express from "express"
-import { deleteAddress, getAllUsers, getUser, getUserById, deleteUser, getTopCustomers, loginUser, registerUser, updateAddress, updatePassword, verifyOTP } from "../controllers/userController.js"
+import { deleteAddress, getAllUsers, getUser, getUserById, deleteUser, getTopCustomers, loginUser, logoutUser, registerUser, updateAddress, updatePassword, verifyOTP } from "../controllers/userController.js"
 import authMiddleware from "../middleware/auth.js";
 import requirePermission from "../middleware/permissions.js";
 import { PERMISSIONS } from "../utils/permissions.js";
@@ -8,6 +8,7 @@ const userRouter = express.Router();
 
 userRouter.post("/register", registerUser);
 userRouter.post("/login", loginUser);
+userRouter.post("/logout", logoutUser);
 userRouter.post("/verifyotp", verifyOTP);
 userRouter.post("/getuser", authMiddleware, getUser);
 userRouter.post("/updatepassword", updatePassword);

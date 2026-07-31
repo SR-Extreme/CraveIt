@@ -4,6 +4,7 @@ import axios from "axios";
 import "./FoodDetails.css";
 import { StoreContext } from "../../context/StoreContext";
 import QuantitySelector from "../../components/QuantitySelector/QuantitySelector";
+import { getImageUrl } from "../../utils/imageUrl";
 
 const FoodDetails = () => {
     const { id } = useParams();
@@ -75,7 +76,7 @@ const FoodDetails = () => {
             <div className="food-details-card">
                 <div className="food-details-image-wrap">
                     <img
-                        src={`${url}/images/${food.image}`}
+                        src={getImageUrl(food.image)}
                         alt={food.name}
                         className="food-details-image"
                     />

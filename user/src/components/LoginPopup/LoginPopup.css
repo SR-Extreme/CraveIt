@@ -5,13 +5,12 @@
     display: grid;
     place-items: center;
     padding: 20px;
-    font-family: Outfit, system-ui, sans-serif;
 }
 
 .login-popup-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(73, 85, 126, 0.45);
+    background: rgba(17, 17, 17, 0.5);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
 }
@@ -20,13 +19,11 @@
     position: relative;
     z-index: 1;
     width: min(100%, 400px);
-    background: #fff;
-    border-radius: 12px;
-    padding: 24px 22px 20px;
-    border: 1px solid rgba(73, 85, 126, 0.1);
-    box-shadow:
-        0 24px 48px rgba(73, 85, 126, 0.18),
-        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 26px 24px 22px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
     animation: loginPopupIn 0.35s ease;
 }
 
@@ -51,9 +48,9 @@
 }
 
 .login-popup-header h2 {
-    color: #49557e;
-    font-size: 1.35rem;
-    font-weight: 600;
+    color: var(--color-text);
+    font-size: 1.4rem;
+    font-weight: 700;
     line-height: 1.2;
 }
 
@@ -65,20 +62,20 @@
     height: 40px;
     margin: -8px -8px 0 0;
     border: none;
-    border-radius: 50%;
+    border-radius: 999px;
     background: transparent;
-    color: #6b7288;
+    color: var(--color-text-muted);
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: background var(--transition-fast), color var(--transition-fast);
 }
 
 .login-popup-close:hover {
-    background: #fff4f2;
-    color: #ff6347;
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
 }
 
 .login-popup-sub {
-    color: #6b7288;
+    color: var(--color-text-muted);
     font-size: 14px;
     margin-bottom: 16px;
 }
@@ -96,18 +93,22 @@
     gap: 2px;
     width: 100%;
     padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid #e0e3eb;
-    background: #fff;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
     cursor: pointer;
     text-align: left;
-    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s, transform 0.15s;
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-fast),
+        transform 0.15s ease;
 }
 
 .login-popup-role:hover {
-    border-color: rgba(255, 99, 71, 0.45);
-    background: #fffdfb;
-    box-shadow: 0 4px 14px rgba(73, 85, 126, 0.08);
+    border-color: var(--color-primary-muted);
+    background: var(--color-primary-soft);
+    box-shadow: var(--shadow-sm);
 }
 
 .login-popup-role:active {
@@ -119,36 +120,30 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: #a0a5b8;
+    color: var(--color-text-light);
 }
 
 .login-popup-role-title {
     font-size: 16px;
     font-weight: 600;
-    color: #49557e;
+    color: var(--color-text);
 }
 
-.login-popup-role--user:hover .login-popup-role-title {
-    color: #ff6347;
-}
-
-.login-popup-role--delivery:hover .login-popup-role-title {
-    color: #ff6347;
-}
-
+.login-popup-role--user:hover .login-popup-role-title,
+.login-popup-role--delivery:hover .login-popup-role-title,
 .login-popup-role--admin:hover .login-popup-role-title {
-    color: #ff6347;
+    color: var(--color-primary);
 }
 
 .login-popup-footer {
     margin-top: 18px;
     padding-top: 16px;
-    border-top: 1px solid #eef0f5;
+    border-top: 1px solid var(--color-border);
 }
 
 .login-popup-footer p {
     text-align: center;
-    color: #6b7288;
+    color: var(--color-text-muted);
     font-size: 14px;
 }
 
@@ -157,7 +152,7 @@
     border: none;
     padding: 0;
     font: inherit;
-    color: #ff6347;
+    color: var(--color-primary);
     font-weight: 600;
     cursor: pointer;
     text-decoration: none;
@@ -165,4 +160,5 @@
 
 .login-popup-link:hover {
     text-decoration: underline;
+    color: var(--color-primary-dark);
 }

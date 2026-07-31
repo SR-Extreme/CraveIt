@@ -3,6 +3,7 @@ import './Profile.css'
 import axios from 'axios'
 import { StoreContext } from '../../context/StoreContext'
 import { toast } from "react-toastify"
+import { addressValidators, hasErrors, validators } from '../../utils/validation'
 
 const Profile = () => {
 
@@ -12,6 +13,7 @@ const Profile = () => {
         oldPassword: "",
         newPassword: ""
     })
+    const [passwordErrors, setPasswordErrors] = useState({})
     const [data, setData] = useState({
         firstName: "",
         lastName: "",
@@ -23,6 +25,7 @@ const Profile = () => {
         country: "",
         phone: ""
     })
+    const [addressErrors, setAddressErrors] = useState({})
     const [isChangePassword, setIsChangePassword] = useState(false);
     const [showAddressForm, setShowAddressForm] = useState(false);
 
@@ -30,11 +33,25 @@ const Profile = () => {
         const name = e.target.name;
         const value = e.target.value;
         setPasswordData((passwordData) => ({ ...passwordData, [name]: value }));
+        if (passwordErrors[name]) {
+            const message = name === "oldPassword"
+                ? validators.password(value, "Old password")
+                : validators.password(value, "New password");
+            setPasswordErrors((prev) => ({ ...prev, [name]: message }));
+        }
+    }
+
+    const handlePasswordBlur = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        const message = name === "oldPassword"
+            ? validators.password(value, "Old password")
+            : validators.password(value, "New password");
+        setPasswordErrors((prev) => ({ ...prev, [name]: message }));
     }
 
     const getUser = async () => {
-        const token = sessionStorage.getItem("user_token") || localStorage.getItem("user_token");
-        const response = await axios.post(url + '/api/user/getuser', {}, { headers: { token: token } });
+        const response = await axios.post(url + '/api/user/getuser', {});
         if (response.data.success) {
             setUser(response.data.data);
         }
@@ -42,10 +59,21 @@ const Profile = () => {
 
     const changePassword = async (e) => {
         e.preventDefault();
+        const nextErrors = {
+            oldPassword: validators.password(passwordData.oldPassword, "Old password"),
+            newPassword: validators.password(passwordData.newPassword, "New password"),
+        };
+        if (passwordData.oldPassword && passwordData.newPassword && passwordData.oldPassword === passwordData.newPassword) {
+            nextErrors.newPassword = "New password must be different from old password";
+        }
+        setPasswordErrors(nextErrors);
+        if (hasErrors(nextErrors)) return;
+
         const response = await axios.post(url + "/api/user/updatepassword", { email: user.email, oldPassword: passwordData.oldPassword, newPassword: passwordData.newPassword });
         if (response.data.success) {
             toast.success(response.data.message);
             setIsChangePassword(false);
+            setPasswordErrors({});
         } else {
             toast.error(response.data.message);
         }
@@ -59,13 +87,30 @@ const Profile = () => {
         const name = event.target.name;
         const value = event.target.value;
         setData(data => ({ ...data, [name]: value }));
+        if (addressErrors[name]) {
+            setAddressErrors((prev) => ({ ...prev, [name]: addressValidators[name](value) }));
+        }
+    }
+
+    const onBlurHandler = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setAddressErrors((prev) => ({ ...prev, [name]: addressValidators[name](value) }));
     }
 
     const onsubmitHandler = async (e) => {
         e.preventDefault();
+        const nextErrors = {};
+        Object.keys(addressValidators).forEach((key) => {
+            nextErrors[key] = addressValidators[key](data[key]);
+        });
+        setAddressErrors(nextErrors);
+        if (hasErrors(nextErrors)) return;
+
         const response = await axios.post(url + "/api/user/updateaddress", { email: user.email, address: data });
         if (response.data.success) {
             setShowAddressForm(false);
+            setAddressErrors({});
             setData({
                 firstName: "",
                 lastName: "",
@@ -98,8 +143,7 @@ const Profile = () => {
     }
 
     const deleteAddress = async (addId, index) => {
-        const token = sessionStorage.getItem("user_token") || localStorage.getItem("user_token");
-        const response = await axios.post(url + "/api/user/deleteaddress", { id: addId }, { headers: { token: token } });
+        const response = await axios.post(url + "/api/user/deleteaddress", { id: addId });
         if (response.data.success) {
             setDefaultData({
                 firstName: "",
@@ -139,11 +183,14 @@ const Profile = () => {
         }
     }, [showAddressForm])
 
+    const fieldClass = (name) => (addressErrors[name] ? "field-invalid" : "");
+
     return (
         <div className="profile">
 
             <div className="profile-container">
                 <h2>My Profile</h2>
+                <p className="profile-subtitle">Manage your details, addresses, and password</p>
 
                 {/* USER DETAILS */}
                 <div className="profile-card">
@@ -186,22 +233,49 @@ const Profile = () => {
                                 </button>
                             </div>
 
-                            <form onSubmit={onsubmitHandler} className="profile-address-form">
+                            <form onSubmit={onsubmitHandler} className="profile-address-form" noValidate>
                                 <div className="multi-fields">
-                                    <input required name='firstName' onChange={onChangeHandler} value={data.firstName} type="text" placeholder='First name' />
-                                    <input required name='lastName' onChange={onChangeHandler} value={data.lastName} type="text" placeholder='Last name' />
+                                    <div className="form-field">
+                                        <input name='firstName' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.firstName} type="text" placeholder='First name' className={fieldClass("firstName")} />
+                                        {addressErrors.firstName ? <p className="field-error">{addressErrors.firstName}</p> : null}
+                                    </div>
+                                    <div className="form-field">
+                                        <input name='lastName' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.lastName} type="text" placeholder='Last name' className={fieldClass("lastName")} />
+                                        {addressErrors.lastName ? <p className="field-error">{addressErrors.lastName}</p> : null}
+                                    </div>
                                 </div>
-                                <input required name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder='Email' />
-                                <input required name='street' onChange={onChangeHandler} value={data.street} type="text" placeholder='Street' />
+                                <div className="form-field">
+                                    <input name='email' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.email} type="email" placeholder='Email' className={fieldClass("email")} />
+                                    {addressErrors.email ? <p className="field-error">{addressErrors.email}</p> : null}
+                                </div>
+                                <div className="form-field">
+                                    <input name='street' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.street} type="text" placeholder='Street' className={fieldClass("street")} />
+                                    {addressErrors.street ? <p className="field-error">{addressErrors.street}</p> : null}
+                                </div>
                                 <div className="multi-fields">
-                                    <input required name='city' onChange={onChangeHandler} value={data.city} type="text" placeholder='City' />
-                                    <input required name='state' onChange={onChangeHandler} value={data.state} type="text" placeholder='State' />
+                                    <div className="form-field">
+                                        <input name='city' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.city} type="text" placeholder='City' className={fieldClass("city")} />
+                                        {addressErrors.city ? <p className="field-error">{addressErrors.city}</p> : null}
+                                    </div>
+                                    <div className="form-field">
+                                        <input name='state' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.state} type="text" placeholder='State' className={fieldClass("state")} />
+                                        {addressErrors.state ? <p className="field-error">{addressErrors.state}</p> : null}
+                                    </div>
                                 </div>
                                 <div className="multi-fields">
-                                    <input required name='zipcode' onChange={onChangeHandler} value={data.zipcode} type="text" placeholder='Zip code' />
-                                    <input required name='country' onChange={onChangeHandler} value={data.country} type="text" placeholder='Country' />
+                                    <div className="form-field">
+                                        <input name='zipcode' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.zipcode} type="text" placeholder='Zip code' className={fieldClass("zipcode")} />
+                                        {addressErrors.zipcode ? <p className="field-error">{addressErrors.zipcode}</p> : null}
+                                    </div>
+                                    <div className="form-field">
+                                        <input name='country' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.country} type="text" placeholder='Country' className={fieldClass("country")} />
+                                        {addressErrors.country ? <p className="field-error">{addressErrors.country}</p> : null}
+                                    </div>
                                 </div>
-                                <input required name='phone' onChange={onChangeHandler} value={data.phone} type="text" placeholder='Phone' />
+                                <div className="form-field">
+                                    <input name='phone' onChange={onChangeHandler} onBlur={onBlurHandler} value={data.phone} type="text" placeholder='Phone' className={fieldClass("phone")} />
+                                    {addressErrors.phone ? <p className="field-error">{addressErrors.phone}</p> : null}
+                                </div>
 
                                 <div className="profile-modal-actions">
                                     <button type="submit" className="profile-btn">
@@ -217,7 +291,7 @@ const Profile = () => {
                 <div className="profile-card">
                     <div className="profile-card-header">
                         <h3>Saved Addresses</h3>
-                        <button className="profile-btn profile-btn-sm" onClick={() => setShowAddressForm(true)}>
+                        <button className="profile-btn profile-btn-sm" onClick={() => { setShowAddressForm(true); setAddressErrors({}); }}>
                             + Add new address
                         </button>
                     </div>
@@ -257,7 +331,7 @@ const Profile = () => {
                             </div>
                         ))
                     ) : (
-                        <p>No addresses saved</p>
+                        <p className="profile-empty">No addresses saved yet.</p>
                     )}
                 </div>
 
@@ -266,27 +340,37 @@ const Profile = () => {
 
                     {isChangePassword &&
                         (<>
-                            <form autoComplete="off">
-                                <input
-                                    type="password"
-                                    name="oldPassword"
-                                    placeholder="Old Password"
-                                    value={passwordData.oldPassword}
-                                    onChange={handlePasswordChange}
-                                />
+                            <form autoComplete="off" onSubmit={changePassword} noValidate>
+                                <div className="form-field">
+                                    <input
+                                        type="password"
+                                        name="oldPassword"
+                                        placeholder="Old Password"
+                                        value={passwordData.oldPassword}
+                                        onChange={handlePasswordChange}
+                                        onBlur={handlePasswordBlur}
+                                        className={passwordErrors.oldPassword ? "field-invalid" : ""}
+                                    />
+                                    {passwordErrors.oldPassword ? <p className="field-error">{passwordErrors.oldPassword}</p> : null}
+                                </div>
 
-                                <input
-                                    type="password"
-                                    name="newPassword"
-                                    placeholder="New Password"
-                                    value={passwordData.newPassword}
-                                    onChange={handlePasswordChange}
-                                />
+                                <div className="form-field">
+                                    <input
+                                        type="password"
+                                        name="newPassword"
+                                        placeholder="New Password"
+                                        value={passwordData.newPassword}
+                                        onChange={handlePasswordChange}
+                                        onBlur={handlePasswordBlur}
+                                        className={passwordErrors.newPassword ? "field-invalid" : ""}
+                                    />
+                                    {passwordErrors.newPassword ? <p className="field-error">{passwordErrors.newPassword}</p> : null}
+                                </div>
+                                <button type="submit">Update Password</button>
                             </form>
-                            <button onClick={changePassword}>Update Password</button>
                         </>)
                     }
-                    {!isChangePassword && <button onClick={() => setIsChangePassword(true)}>Change Password</button>}
+                    {!isChangePassword && <button onClick={() => { setIsChangePassword(true); setPasswordErrors({}); }}>Change Password</button>}
                 </div>
 
             </div>

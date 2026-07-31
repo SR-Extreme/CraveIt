@@ -1,34 +1,71 @@
 .place-order {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 50px;
-    margin-top: 100px;
+    gap: 32px;
+    margin-top: 28px;
+    padding-bottom: 24px;
+    animation: fadeIn 0.45s ease;
 }
 
 .place-order-left {
     width: 100%;
     max-width: max(30%, 500px);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 28px 24px;
 }
 
 .place-order-left .title {
-    font-size: 30px;
-    font-weight: 600;
-    margin-bottom: 50px;
+    font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--color-text);
+}
+
+.place-order-subtitle {
+    font-size: 14px;
+    color: var(--color-text-muted);
+    margin-bottom: 22px;
+}
+
+.place-order-left .form-field {
+    margin-bottom: 14px;
 }
 
 .place-order-left input {
-    margin-bottom: 15px;
+    margin-bottom: 0;
     width: 100%;
-    padding: 10px;
-    border: 1px solid #c5c5c5;
-    border-radius: 4px;
-    outline-color: tomato;
+    padding: 12px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    font-size: 14px;
+    color: var(--color-text);
+    background: var(--color-bg);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.place-order-left input::placeholder {
+    color: var(--color-text-light);
+}
+
+.place-order-left input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-muted);
+    background: var(--color-surface);
 }
 
 .place-order-left .multi-fields {
     display: flex;
-    gap: 10px;
+    gap: 12px;
+}
+
+.place-order-left .multi-fields .form-field {
+    flex: 1;
+    min-width: 0;
 }
 
 .place-order-right {
@@ -36,6 +73,28 @@
     max-width: max(40%, 500px);
 }
 
+.place-order .cart-total {
+    margin: 0;
+}
+
 .place-order .cart-total button {
-    margin-top: 30px;
+    margin-top: 8px;
+    max-width: none;
+}
+
+@media (max-width: 900px) {
+    .place-order {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .place-order-left,
+    .place-order-right {
+        max-width: none;
+    }
+
+    .place-order-left .multi-fields {
+        flex-direction: column;
+        gap: 0;
+    }
 }
