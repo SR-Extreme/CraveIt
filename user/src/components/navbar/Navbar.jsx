@@ -101,30 +101,55 @@ const Navbar = ({ setShowLogin }) => {
   }, [mobileOpen]);
 
   return (
-    <div className="navbar">
-      <button
-        type="button"
-        className="navbar-toggle"
-        aria-label={mobileOpen ? "Close menu" : "Open menu"}
-        aria-expanded={mobileOpen}
-        onClick={() => setMobileOpen((open) => !open)}
-      >
-        {mobileOpen ? <IoClose /> : <IoMenu />}
-      </button>
+    <>
+      <div className="navbar">
+        <button
+          type="button"
+          className="navbar-toggle"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((open) => !open)}
+        >
+          {mobileOpen ? <IoClose /> : <IoMenu />}
+        </button>
 
-      <Link to="/" className="navbar-brand" onClick={() => setMenu("home")}>
-        <img src={craveIt_logo} alt="CraveIt" className="logo" />
-      </Link>
+        <Link to="/" className="navbar-brand" onClick={() => setMenu("home")}>
+          <img src={craveIt_logo} alt="CraveIt" className="logo" />
+        </Link>
 
-      <div
-        className={`navbar-backdrop ${mobileOpen ? "open" : ""}`}
-        onClick={closeMobile}
-        aria-hidden={!mobileOpen}
-      />
+        <ul className="navbar-menu navbar-menu--desktop">
+          <Link
+            to="/"
+            onClick={() => setMenu("home")}
+            className={menu === "home" ? "active" : ""}
+          >
+            Home
+          </Link>
+          <Link
+            to="/explore"
+            onClick={() => setMenu("explore")}
+            className={menu === "explore" ? "active" : ""}
+          >
+            Explore
+          </Link>
+          <button
+            type="button"
+            className={`navbar-menu-link ${menu === "popular" ? "active" : ""}`}
+            onClick={() => handleSectionNav("in-demand", "popular")}
+          >
+            Popular
+          </button>
+          <button
+            type="button"
+            className={`navbar-menu-link ${menu === "gallery" ? "active" : ""}`}
+            onClick={() => handleSectionNav("gallery", "gallery")}
+          >
+            Gallery
+          </button>
+        </ul>
 
-      <ul className={`navbar-menu ${mobileOpen ? "open" : ""}`}>
-        <li className="navbar-menu-search">
-          <div className="navbar-search navbar-search--mobile">
+        <div className="navbar-right">
+          <div className="navbar-search">
             <input
               type="text"
               placeholder="Search your crave..."
@@ -140,7 +165,90 @@ const Navbar = ({ setShowLogin }) => {
               className="navbar-search-button"
             />
           </div>
-        </li>
+
+          <div className="navbar-search-icon">
+            <Link to="/cart">
+              <img src={assets.basket_icon} alt="Cart" />
+            </Link>
+            {getTotalCartAmount() > 0 ? <div className="dot"></div> : null}
+          </div>
+
+          {!token ? (
+            <button type="button" onClick={() => setShowLogin(true)}>
+              Sign in
+            </button>
+          ) : (
+            <div
+              className={`navbar-profile ${profileOpen ? "open" : ""}`}
+              ref={profileRef}
+            >
+              <button
+                type="button"
+                className="navbar-profile-btn"
+                aria-label="Profile menu"
+                aria-expanded={profileOpen}
+                onClick={() => setProfileOpen((open) => !open)}
+              >
+                <img src={assets.profile_icon} alt="Profile" />
+              </button>
+              <ul className="nav-profile-dropdown">
+                <li
+                  onClick={() => {
+                    setProfileOpen(false);
+                    navigate("/myprofile");
+                  }}
+                >
+                  <FaUser color="var(--color-primary)" />
+                  <p>Profile</p>
+                </li>
+                <hr />
+                <li
+                  onClick={() => {
+                    setProfileOpen(false);
+                    navigate("/myorders");
+                  }}
+                >
+                  <IoBag color="var(--color-primary)" />
+                  <p>Orders</p>
+                </li>
+                <hr />
+                <li onClick={logout}>
+                  <RiLogoutBoxRLine color="var(--color-primary)" />
+                  <p>Logout</p>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div
+        className={`navbar-backdrop ${mobileOpen ? "open" : ""}`}
+        onClick={closeMobile}
+        aria-hidden={!mobileOpen}
+      />
+
+      <nav
+        className={`navbar-drawer ${mobileOpen ? "open" : ""}`}
+        aria-hidden={!mobileOpen}
+      >
+        <div className="navbar-search navbar-search--mobile">
+          <input
+            type="text"
+            placeholder="Search your crave..."
+            className="navbar-search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleEnterPress}
+          />
+          <img
+            onClick={handleSearch}
+            src={assets.search_icon}
+            alt="Search"
+            className="navbar-search-button"
+          />
+        </div>
+
         <Link
           to="/"
           onClick={() => {
@@ -175,81 +283,8 @@ const Navbar = ({ setShowLogin }) => {
         >
           Gallery
         </button>
-      </ul>
-
-      <div className="navbar-right">
-        <div className="navbar-search">
-          <input
-            type="text"
-            placeholder="Search your crave..."
-            className="navbar-search-input"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={handleEnterPress}
-          />
-          <img
-            onClick={handleSearch}
-            src={assets.search_icon}
-            alt="Search"
-            className="navbar-search-button"
-          />
-        </div>
-
-        <div className="navbar-search-icon">
-          <Link to="/cart">
-            <img src={assets.basket_icon} alt="Cart" />
-          </Link>
-          {getTotalCartAmount() > 0 ? <div className="dot"></div> : null}
-        </div>
-
-        {!token ? (
-          <button type="button" onClick={() => setShowLogin(true)}>
-            Sign in
-          </button>
-        ) : (
-          <div
-            className={`navbar-profile ${profileOpen ? "open" : ""}`}
-            ref={profileRef}
-          >
-            <button
-              type="button"
-              className="navbar-profile-btn"
-              aria-label="Profile menu"
-              aria-expanded={profileOpen}
-              onClick={() => setProfileOpen((open) => !open)}
-            >
-              <img src={assets.profile_icon} alt="Profile" />
-            </button>
-            <ul className="nav-profile-dropdown">
-              <li
-                onClick={() => {
-                  setProfileOpen(false);
-                  navigate("/myprofile");
-                }}
-              >
-                <FaUser color="var(--color-primary)" />
-                <p>Profile</p>
-              </li>
-              <hr />
-              <li
-                onClick={() => {
-                  setProfileOpen(false);
-                  navigate("/myorders");
-                }}
-              >
-                <IoBag color="var(--color-primary)" />
-                <p>Orders</p>
-              </li>
-              <hr />
-              <li onClick={logout}>
-                <RiLogoutBoxRLine color="var(--color-primary)" />
-                <p>Logout</p>
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
-    </div>
+      </nav>
+    </>
   );
 };
 

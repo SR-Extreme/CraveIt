@@ -166,6 +166,22 @@ const PlaceOrder = () => {
           </div>
           <button type="submit">PROCEED TO PAYMENT</button>
         </div>
+        <div className="test-card-info">
+          <p className="test-card-info-title">Test card credentials</p>
+          <p className="test-card-info-subtitle">Use these details on the Stripe payment page</p>
+          <div className="test-card-info-row">
+            <span>Card number</span>
+            <code>4242 4242 4242 4242</code>
+          </div>
+          <div className="test-card-info-row">
+            <span>Expiry</span>
+            <code>Any future date</code>
+          </div>
+          <div className="test-card-info-row">
+            <span>CVV</span>
+            <code>Any 3-digit number</code>
+          </div>
+        </div>
       </div>
     </form>
   )

@@ -13,6 +13,7 @@ import Footer from "./components/Footer/Footer";
 import VerifyOTP from "./pages/VerifyOTP/VerifyOTP";
 import { StoreContext } from "./context/StoreContext";
 import axios from "axios";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const { token, setToken, url } = useContext(StoreContext);
@@ -51,6 +52,7 @@ const App = () => {
 
   return (
     <>
+      <ScrollToTop />
       <div className="delivery-agent-app">
         <Routes>
           <Route path="/auth" element={<AuthPage />} />

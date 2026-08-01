@@ -19,6 +19,7 @@ import VerifyOTP from './pages/VerifyOTP/VerifyOTP'
 import Explore from "./pages/Explore/Explore";
 import FoodDetails from "./pages/FoodDetails/FoodDetails";
 import DeliveryOtpNotifier from "./components/DeliveryOtpNotifier/DeliveryOtpNotifier";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
 
@@ -29,6 +30,7 @@ const App = () => {
 
   return (
     <>
+      <ScrollToTop />
       {showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
       <DeliveryOtpNotifier />
       <div className={hideLayout ? "auth-route-root" : "app"}>

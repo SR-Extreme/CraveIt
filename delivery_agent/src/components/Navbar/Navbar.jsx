@@ -35,20 +35,37 @@ const Navbar = () => {
   const closeMobile = () => setMobileOpen(false);
 
   return (
-    <div className="navbar">
-      <button
-        type="button"
-        className="navbar-toggle"
-        aria-label={mobileOpen ? "Close menu" : "Open menu"}
-        aria-expanded={mobileOpen}
-        onClick={() => setMobileOpen((open) => !open)}
-      >
-        {mobileOpen ? <IoClose /> : <IoMenu />}
-      </button>
+    <>
+      <div className="navbar">
+        <button
+          type="button"
+          className="navbar-toggle"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((open) => !open)}
+        >
+          {mobileOpen ? <IoClose /> : <IoMenu />}
+        </button>
 
-      <Link to="/" className="navbar-brand" onClick={closeMobile}>
-        <img src={craveIt_logo} alt="CraveIt" className="logo" />
-      </Link>
+        <Link to="/" className="navbar-brand" onClick={closeMobile}>
+          <img src={craveIt_logo} alt="CraveIt" className="logo" />
+        </Link>
+
+        <ul className="navbar-menu navbar-menu--desktop">
+          <NavLink to="/" end>
+            Current Orders
+          </NavLink>
+          <NavLink to="/past-orders">Past Orders</NavLink>
+          <NavLink to="/profile">Profile</NavLink>
+          <NavLink to="/delivery-panel">Delivery Panel</NavLink>
+        </ul>
+
+        <div className="navbar-right">
+          <button type="button" onClick={logout}>
+            Logout
+          </button>
+        </div>
+      </div>
 
       <div
         className={`navbar-backdrop ${mobileOpen ? "open" : ""}`}
@@ -56,7 +73,10 @@ const Navbar = () => {
         aria-hidden={!mobileOpen}
       />
 
-      <ul className={`navbar-menu ${mobileOpen ? "open" : ""}`}>
+      <nav
+        className={`navbar-drawer ${mobileOpen ? "open" : ""}`}
+        aria-hidden={!mobileOpen}
+      >
         <NavLink to="/" end onClick={closeMobile}>
           Current Orders
         </NavLink>
@@ -69,14 +89,8 @@ const Navbar = () => {
         <NavLink to="/delivery-panel" onClick={closeMobile}>
           Delivery Panel
         </NavLink>
-      </ul>
-
-      <div className="navbar-right">
-        <button type="button" onClick={logout}>
-          Logout
-        </button>
-      </div>
-    </div>
+      </nav>
+    </>
   );
 };
 

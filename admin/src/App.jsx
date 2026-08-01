@@ -16,6 +16,7 @@ import UserDetails from "./pages/UserDetails/UserDetails";
 import Categories from "./pages/Categories/Categories";
 import { hasPermission, PERMISSIONS } from "./utils/permissions";
 import { useAuth } from "./context/AuthContext";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const { role, loading, isAuthenticated, url } = useAuth();
@@ -40,6 +41,7 @@ const App = () => {
 
   return (
     <div className="admin-app">
+      <ScrollToTop />
       <ToastContainer />
       <Routes>
         <Route path="/auth" element={<AuthPage />} />

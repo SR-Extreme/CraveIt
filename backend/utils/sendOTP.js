@@ -43,7 +43,13 @@ const sendOTP = async (email, otp, name, role, purpose = "login") => {
         options.privateKey = privateKey;
     }
 
-    await emailjs.send(serviceId, templateId, templateParams, options);
+    try {
+        await emailjs.send(serviceId, templateId, templateParams, options);
+    } catch (error) {
+        const detail = error?.text || error?.message || "Unknown EmailJS error";
+        console.error("EmailJS send failed:", detail);
+        throw new Error(detail);
+    }
 };
 
 export default sendOTP;

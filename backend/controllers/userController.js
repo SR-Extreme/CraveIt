@@ -40,7 +40,11 @@ const loginUser = async (req, res) => {
         res.json({ success: true, message: "OTP sent successfully to Email", requiresOtp: true, role: user.role });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Failed to send OTP. Please try again." });
+        const message =
+            error?.message && !error.message.includes("EmailJS is not configured")
+                ? `Failed to send OTP: ${error.message}`
+                : "Failed to send OTP. Please try again.";
+        res.json({ success: false, message });
     }
 };
 
@@ -318,7 +322,10 @@ const forgotPassword = async (req, res) => {
         res.json({ success: true, message: "OTP sent successfully to Email" });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error sending OTP" });
+        const message = error?.message
+            ? `Failed to send OTP: ${error.message}`
+            : "Error sending OTP";
+        res.json({ success: false, message });
     }
 };
 
