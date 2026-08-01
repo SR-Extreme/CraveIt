@@ -1,7 +1,10 @@
 .role-auth-page {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 24px;
   box-sizing: border-box;
   position: relative;
@@ -23,8 +26,9 @@
 .role-auth-card {
   position: relative;
   z-index: 1;
-
-  width: min(92vw, 420px);
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
   padding: 28px 24px;
   display: flex;
   flex-direction: column;

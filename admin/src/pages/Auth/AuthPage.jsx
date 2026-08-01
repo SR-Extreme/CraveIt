@@ -8,8 +8,8 @@ import getApiUrl from "../../utils/apiUrl";
 
 const AuthPage = () => {
   const [data, setData] = useState({
-    email: "",
-    password: "",
+    email: "omniprep2004@gmail.com",
+    password: "12345678",
     otp: "",
     newPassword: "",
     confirmPassword: "",
@@ -76,10 +76,11 @@ const AuthPage = () => {
     setErrors({});
     setData((prev) => ({
       ...prev,
+      email: prev.email || "omniprep2004@gmail.com",
       otp: "",
       newPassword: "",
       confirmPassword: "",
-      password: "",
+      password: "12345678",
     }));
   };
 

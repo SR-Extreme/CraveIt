@@ -49,6 +49,7 @@ const LoginPopup = ({ setShowLogin }) => {
             <button type="button" className="login-popup-role login-popup-role--admin" onClick={(e) => onClickHandler(e, "admin")}>
               <span className="login-popup-role-label">{currState} as</span>
               <span className="login-popup-role-title">Admin</span>
+              <span className="login-popup-role-hint">prefilled for assignment of order to delivery agent</span>
             </button>}
         </div>
         <div className="login-popup-footer">
