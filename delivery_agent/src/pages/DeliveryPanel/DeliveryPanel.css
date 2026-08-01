@@ -266,7 +266,7 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .delivery-status-steps {
     grid-template-columns: 1fr 1fr;
     gap: 14px 8px;
@@ -275,6 +275,17 @@
   .delivery-status-step:not(:last-child)::after {
     display: none;
   }
+}
+
+@media (max-width: 640px) {
+  .delivery-panel-card {
+    padding: 18px 14px;
+  }
+
+  .delivery-order-card__title {
+    padding: 14px 16px 10px;
+    flex-wrap: wrap;
+  }
 
   .delivery-actions {
     flex-direction: column;
@@ -282,6 +293,10 @@
 
   .delivery-actions button {
     width: 100%;
+  }
+
+  .delivery-otp-box {
+    padding: 14px 16px 18px;
   }
 
   .delivery-otp-row {

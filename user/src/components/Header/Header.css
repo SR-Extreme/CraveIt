@@ -79,9 +79,14 @@
 
 @media (max-width: 640px) {
   .header-contents {
-    max-width: 72%;
-    right: 5%;
-    top: 34%;
+    max-width: 78%;
+    right: 4%;
+    top: 36%;
+    gap: 10px;
+  }
+
+  .header-contents h2 {
+    font-size: clamp(1.15rem, 5.5vw, 1.55rem);
   }
 
   .header-contents p {
@@ -89,6 +94,19 @@
   }
 
   .header-contents button {
-    padding: 10px 22px;
+    padding: 9px 18px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .header-contents {
+    max-width: 85%;
+    top: 40%;
+  }
+
+  .header-contents button {
+    padding: 8px 14px;
+    font-size: 0.8rem;
   }
 }

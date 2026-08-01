@@ -135,3 +135,30 @@
   border-radius: var(--radius-md);
   max-width: 720px;
 }
+
+@media (max-width: 600px) {
+  .user-details {
+    padding: 20px 4% 40px;
+  }
+
+  .user-details-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .user-details-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .user-details-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 14px 16px;
+  }
+
+  .user-details-row strong {
+    text-align: left;
+  }
+}

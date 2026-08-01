@@ -81,6 +81,12 @@ hr {
   background: var(--bg-main);
 }
 
+@media (max-width: 600px) {
+  .page-shell {
+    padding: 20px 4% 40px;
+  }
+}
+
 .page-shell {
   width: 100%;
   padding: 28px 5% 48px;

@@ -28,7 +28,7 @@
 
 .search-results {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
     gap: 28px;
 }
 
@@ -43,5 +43,10 @@
 @media (max-width: 700px) {
     .search-page {
         padding: 24px 0 0;
+    }
+
+    .search-results {
+        grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+        gap: 16px;
     }
 }

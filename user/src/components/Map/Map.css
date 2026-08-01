@@ -9,7 +9,8 @@
 
 .map-loading {
     width: 100%;
-    height: 400px;
+    height: min(400px, 50vh);
+    min-height: 220px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
@@ -18,4 +19,15 @@
     color: var(--color-text-muted);
     font-size: 16px;
     font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .map-wrapper {
+        margin-top: 16px;
+        border-radius: var(--radius-sm);
+    }
+
+    .map-loading {
+        font-size: 14px;
+    }
 }

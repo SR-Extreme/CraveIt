@@ -40,7 +40,7 @@ const loginUser = async (req, res) => {
         res.json({ success: true, message: "OTP sent successfully to Email", requiresOtp: true, role: user.role });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" });
+        res.json({ success: false, message: "Failed to send OTP. Please try again." });
     }
 };
 

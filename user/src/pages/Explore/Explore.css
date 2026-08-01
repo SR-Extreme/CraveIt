@@ -28,7 +28,19 @@
 
 .explore-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
     gap: 28px;
     margin-top: 32px;
+}
+
+@media (max-width: 600px) {
+    .explore-page {
+        padding: 20px 0 0;
+    }
+
+    .explore-grid {
+        grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+        gap: 16px;
+        margin-top: 20px;
+    }
 }

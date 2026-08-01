@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Navbar.css";
 import craveIt_logo from "../../assets/craveIt_logo.png";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useContext } from "react";
 import { StoreContext } from "../../context/StoreContext";
+import { IoClose, IoMenu } from "react-icons/io5";
 
 const Navbar = () => {
   const { url, setToken } = useContext(StoreContext);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
 
   const logout = async () => {
     try {
@@ -19,19 +21,54 @@ const Navbar = () => {
     window.location.href = "/auth?mode=login";
   };
 
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  const closeMobile = () => setMobileOpen(false);
+
   return (
     <div className="navbar">
-      <Link to="/" className="navbar-brand">
+      <button
+        type="button"
+        className="navbar-toggle"
+        aria-label={mobileOpen ? "Close menu" : "Open menu"}
+        aria-expanded={mobileOpen}
+        onClick={() => setMobileOpen((open) => !open)}
+      >
+        {mobileOpen ? <IoClose /> : <IoMenu />}
+      </button>
+
+      <Link to="/" className="navbar-brand" onClick={closeMobile}>
         <img src={craveIt_logo} alt="CraveIt" className="logo" />
       </Link>
 
-      <ul className="navbar-menu">
-        <NavLink to="/" end>
+      <div
+        className={`navbar-backdrop ${mobileOpen ? "open" : ""}`}
+        onClick={closeMobile}
+        aria-hidden={!mobileOpen}
+      />
+
+      <ul className={`navbar-menu ${mobileOpen ? "open" : ""}`}>
+        <NavLink to="/" end onClick={closeMobile}>
           Current Orders
         </NavLink>
-        <NavLink to="/past-orders">Past Orders</NavLink>
-        <NavLink to="/profile">Profile</NavLink>
-        <NavLink to="/delivery-panel">Delivery Panel</NavLink>
+        <NavLink to="/past-orders" onClick={closeMobile}>
+          Past Orders
+        </NavLink>
+        <NavLink to="/profile" onClick={closeMobile}>
+          Profile
+        </NavLink>
+        <NavLink to="/delivery-panel" onClick={closeMobile}>
+          Delivery Panel
+        </NavLink>
       </ul>
 
       <div className="navbar-right">

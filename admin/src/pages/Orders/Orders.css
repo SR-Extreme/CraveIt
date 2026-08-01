@@ -126,7 +126,31 @@
 }
 
 @media (max-width: 600px) {
+  .order {
+    padding: 20px 4% 40px;
+    gap: 16px;
+  }
+
   .order-stats {
     grid-template-columns: 1fr;
+  }
+
+  .order-item {
+    grid-template-columns: 46px 1fr;
+    gap: 10px 12px;
+    padding: 14px;
+  }
+
+  .order-item > img {
+    grid-row: 1 / 2;
+  }
+
+  .order-item > *:nth-child(n + 3) {
+    grid-column: 1 / -1;
+  }
+
+  .order-item-status {
+    width: 100%;
+    max-width: none;
   }
 }

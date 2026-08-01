@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Footer from "./components/Footer/Footer";
@@ -19,6 +19,7 @@ import { useAuth } from "./context/AuthContext";
 
 const App = () => {
   const { role, loading, isAuthenticated, url } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const defaultPath = role === "admin" ? "/orders" : "/add";
 
   const RequirePermission = ({ permission, children }) => {
@@ -48,9 +49,9 @@ const App = () => {
           element={
             isAuthenticated ? (
               <>
-                <Navbar />
+                <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
                 <div className="app-content">
-                  <Sidebar />
+                  <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
                   <main className="app-main">
                     <Routes>
                       <Route
